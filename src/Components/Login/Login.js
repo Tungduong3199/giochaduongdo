@@ -5,14 +5,14 @@ import Sign_In from "./Sign_In";
 import Sign_Up from "./Sign_Up";
 
 function Login(props) {
-    // const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false)
     return (
         <div>
             <Header/>
-            {/*{show*/}
-                 <Sign_Up/>
-                {/*: <Sign_In setShow={setShow}/>*/}
-            {/*}*/}
+            {show
+                ? <Sign_Up setShow={setShow}/>
+                : <Sign_In setShow={setShow}/>
+            }
             <Footer/>
         </div>
     );

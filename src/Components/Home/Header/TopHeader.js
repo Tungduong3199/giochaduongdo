@@ -6,7 +6,7 @@ import {useHistory} from 'react-router-dom'
 const useStyles = makeStyles({
     text: {
         color: '#777777',
-        textAlign: 'center'
+        textAlign: 'end',
     },
     p:{
         cursor: 'pointer',
@@ -22,11 +22,11 @@ function TopHeader(props) {
     return (
         <Grid container xs={12} sm={12}>
             <Grid item container sm={7}></Grid>
-            <Grid item container sm={5}>
+            <Grid item container sm={5} style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Grid className={classes.text} item sm={4}>
                     <span className={classes.p}>tài khoản của tôi</span>
                 </Grid>
-                <Grid className={classes.text} item sm={4}>
+                <Grid className={classes.text} style={{paddingRight: 10}} item sm={5}>
                     <span className={classes.p}>thủ tục thanh toán</span>
                 </Grid>
                 <Grid className={classes.text} item sm={3}>

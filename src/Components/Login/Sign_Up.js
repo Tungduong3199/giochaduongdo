@@ -1,29 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {auth, firestore} from '../../firebaseConfig'
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import {useHistory} from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -37,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#245a46',
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(3),
     },
     submit: {
@@ -49,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp({setShow}) {
     const classes = useStyles();
+    const history = useHistory();
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
@@ -77,21 +65,25 @@ export default function SignUp({setShow}) {
     }
 
     function createAcc(e) {
-        if (firstName || lastName || address || email || password === '') {
+        if (firstName === '' || lastName === '' || address === '' || email === '' || password === '') {
             setCheck(true)
             e.preventDefault()
+            console.log(e.target.value, 'aaaaaa')
         } else {
-            auth.createUserWithEmailAndPassword(email, password)
-                .catch((e) => {
-                    console.log(e)
-                })
-            firestore.collection('user')
-                .add({
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    address: address
-                })
+            const result = auth.createUserWithEmailAndPassword(email, password)
+            if (result) {
+                firestore.collection('user')
+                    .add({
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        address: address
+                    })
+                    .catch((e)=>{
+                        console.log(e);
+                    })
+                history.push('/')
+            }
         }
     }
 
@@ -109,7 +101,7 @@ export default function SignUp({setShow}) {
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
-                                error={check ? true : false}
+                                error={check === true && firstName === '' ? true : false}
                                 autoComplete="fname"
                                 variant="outlined"
                                 required
@@ -122,7 +114,7 @@ export default function SignUp({setShow}) {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 variant="outlined"
-                                error={check ? true : false}
+                                error={check === true && lastName === '' ? true : false}
                                 required
                                 fullWidth
                                 id="lastName"
@@ -134,7 +126,7 @@ export default function SignUp({setShow}) {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                error={check ? true : false}
+                                error={check === true && address === '' ? true : false}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -147,7 +139,7 @@ export default function SignUp({setShow}) {
                             <TextField
                                 variant="outlined"
                                 required
-                                error={check ? true : false}
+                                error={check === true && email === '' ? true : false}
                                 fullWidth
                                 id="email"
                                 label="Email"
@@ -161,7 +153,7 @@ export default function SignUp({setShow}) {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                error={check ? true : false}
+                                error={check === true && password === '' ? true : false}
                                 name="password"
                                 label="Mật Khẩu"
                                 type="password"
@@ -196,9 +188,6 @@ export default function SignUp({setShow}) {
                     </Grid>
                 </form>
             </div>
-            <Box mt={5}>
-                <Copyright/>
-            </Box>
         </Container>
     );
 }

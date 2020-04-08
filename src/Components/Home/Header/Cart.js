@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     },
     container: {
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         alignItems: 'center',
     }
 })
@@ -40,7 +40,7 @@ function Cart(props) {
                    0 sp - 0đ
                 </p>
             </Grid>
-            <Grid item sm={2}>
+            <Grid item sm={1}>
                 <KeyboardArrowDown className={classes.arrow}/>
             </Grid>
         </Grid>
