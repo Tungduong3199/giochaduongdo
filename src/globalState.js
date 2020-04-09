@@ -1,5 +1,6 @@
 import {setGlobal} from 'reactn'
 
 setGlobal({
-    authUser: null
+    authUser: null,
+    user: {},
 })

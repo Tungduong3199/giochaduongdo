@@ -30,9 +30,6 @@ const properties = {
     infinite: true,
     indicators: false,
     pauseOnHover: true,
-    onChange: (oldIndex, newIndex) => {
-        console.log(`slide transition from ${oldIndex} to ${newIndex}`);
-    },
     arrows: false,
 }
 

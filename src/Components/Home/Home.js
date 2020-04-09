@@ -4,7 +4,7 @@ import Banner from "./Banner/Banner";
 import Content from "./Content/Content";
 import Footer from "./Footer/Footer";
 
-function Home(props) {
+function Home() {
     return (
         <div>
             <Header/>

@@ -40,6 +40,7 @@ export default function SignUp({setShow}) {
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [email, setEmail] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')
     const [password, setPassword] = useState('')
     const [address, setAddress] = useState('')
     const [check, setCheck] = useState(false)
@@ -50,6 +51,10 @@ export default function SignUp({setShow}) {
 
     function handleChangeLName(e) {
         setLastName(e.target.value)
+    }
+
+    function handleChangePhoneNumber(e) {
+        setPhoneNumber(e.target.value)
     }
 
     function handleChangeEmail(e) {
@@ -77,7 +82,9 @@ export default function SignUp({setShow}) {
                         firstName: firstName,
                         lastName: lastName,
                         email: email,
-                        address: address
+                        address: address,
+                        phoneNumber: phoneNumber,
+                        displayName: firstName + ' ' + lastName
                     })
                     .catch((e)=>{
                         console.log(e);
@@ -133,6 +140,18 @@ export default function SignUp({setShow}) {
                                 label="Địa Chỉ"
                                 autoComplete="address"
                                 onChange={handleChangeAddress}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                error={check === true && phoneNumber === '' ? true : false}
+                                variant="outlined"
+                                required
+                                fullWidth
+                                type={'number'}
+                                label="Số Điện Thoại"
+                                autoComplete="phone number"
+                                onChange={handleChangePhoneNumber}
                             />
                         </Grid>
                         <Grid item xs={12}>

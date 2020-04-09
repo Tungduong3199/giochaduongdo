@@ -2,6 +2,7 @@ import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core/styles";
 import {useHistory} from 'react-router-dom'
+import {firestore,auth} from '../../../firebaseConfig'
 
 const useStyles = makeStyles({
     text: {
@@ -16,9 +17,15 @@ const useStyles = makeStyles({
         }
     }
 })
+
 function TopHeader(props) {
     const classes = useStyles()
     const history = useHistory();
+console.log(auth.currentUser)
+    const getUserData = () => {
+        firestore.collection('user')
+
+    }
     return (
         <Grid container xs={12} sm={12}>
             <Grid item container sm={7}></Grid>

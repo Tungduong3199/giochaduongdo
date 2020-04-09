@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -13,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {useHistory} from 'react-router-dom'
-import Google_Face from "./Google_Face";
+import {auth} from '../../firebaseConfig'
 
 function Copyright() {
     return (
@@ -53,6 +51,24 @@ const useStyles = makeStyles((theme) => ({
 export default function Sign_In({setShow}) {
     const classes = useStyles();
     const history = useHistory();
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    function handleChangeEmail(e) {
+        setEmail(e.target.value)
+    }
+
+    function handleChangePassword(e) {
+        setPassword(e.target.value)
+    }
+
+    function handleClickSignIn() {
+        const result = auth.signInWithEmailAndPassword(email, password)
+        if (result) {
+            history.push('/')
+        }
+    }
+
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
@@ -69,21 +85,19 @@ export default function Sign_In({setShow}) {
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
                         label="Tài Khoản"
-                        name="email"
                         autoComplete="email"
                         autoFocus
+                        onChange={handleChangeEmail}
                     />
                     <TextField
                         variant="outlined"
                         margin="normal"
                         required
                         fullWidth
-                        name="password"
                         label="Mật Khẩu"
                         type="password"
-                        id="password"
+                        onChange={handleChangePassword}
                         autoComplete="current-password"
                     />
                     <Button
@@ -91,6 +105,7 @@ export default function Sign_In({setShow}) {
                         fullWidth
                         variant="contained"
                         className={classes.submit}
+                        onClick={handleClickSignIn}
                     >
                         Đăng Nhập
                     </Button>
