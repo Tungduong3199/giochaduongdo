@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import anh1 from '../../../Images/foody-upload-api-foody-ccc-636776178286974695-181112111025.jpg'
+import anh1 from '../../../Images/gio-lua.png'
 import ProductDetails from "./ProductDetails";
 import IntroduceProduct from "./IntroduceProduct";
 

@@ -78,7 +78,8 @@ export default function SignUp({setShow}) {
             const result = auth.createUserWithEmailAndPassword(email, password)
             if (result) {
                 firestore.collection('user')
-                    .add({
+                    .doc(email)
+                    .set({
                         firstName: firstName,
                         lastName: lastName,
                         email: email,

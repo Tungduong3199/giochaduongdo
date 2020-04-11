@@ -11,20 +11,15 @@ const useStyles = makeStyles({
     box: {
         height: 300,
         overflow: 'hidden',
-        transition: 'all 0.5s ease-in-out',
-        '&:hover': {
-            transform: 'scale(0.95,0.95)'
-        }
     },
     img: {
         width: '100%',
         height: '100%',
         margin: 'auto',
         display: 'block',
-        transition: 'all 0.5s ease-in-out',
-        overflow: 'hidden',
+        transition: 'all 0.8s ease-in-out',
         '&:hover': {
-            transform: 'scale(1.3,1.3)',
+            transform: 'scale(1.2,1.2)',
         }
     }
 })
@@ -34,11 +29,15 @@ function IntroduceProduct(props) {
 
     return (
         <Grid container sm={12} spacing={2} className={classes.container}>
-            <Grid item sm={6} className={classes.box}>
-                <img className={classes.img} src={anh2}/>
+            <Grid item sm={6}>
+                <div className={classes.box}>
+                    <img className={classes.img} src={anh2}/>
+                </div>
             </Grid>
-            <Grid item sm={6} className={classes.box}>
-                <img className={classes.img} src={anh1}/>
+            <Grid item sm={6}>
+                <div className={classes.box}>
+                    <img className={classes.img} src={anh1}/>
+                </div>
             </Grid>
         </Grid>
     );

@@ -19,7 +19,7 @@ const useStyles = makeStyles({
         margin: '0 auto',
         display: 'block',
         cursor: 'pointer',
-        transition: 'all 0.4s ease-in-out',
+        transition: 'all 0.7s ease-in-out',
         overflow: 'hidden',
         '&:hover': {
             transform: 'scale(1.2,1.2)',
