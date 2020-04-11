@@ -3,13 +3,17 @@ import Header from "../Home/Header/Header";
 import Footer from "../Home/Footer/Footer";
 import {makeStyles} from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     footer: {
         position: 'absolute',
         bottom: 0,
         width: '100%'
-    }
-})
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+    },
+}))
 
 function AddProduct(props) {
     const classes = useStyles();
@@ -20,24 +24,27 @@ function AddProduct(props) {
                 {/*<Container component="main" maxWidth="xs">*/}
                 {/*    <CssBaseline/>*/}
                 {/*    <div className={classes.paper}>*/}
-                {/*        <Avatar className={classes.avatar}>*/}
-                {/*            <LockOutlinedIcon/>*/}
-                {/*        </Avatar>*/}
                 {/*        <Typography component="h1" variant="h5">*/}
                 {/*            Đăng Ký*/}
                 {/*        </Typography>*/}
                 {/*        <form className={classes.form} noValidate>*/}
                 {/*            <Grid container spacing={2}>*/}
                 {/*                <Grid item xs={12}>*/}
-                {/*                    <TextField*/}
-                {/*                        error={check === true && address === '' ? true : false}*/}
-                {/*                        variant="outlined"*/}
-                {/*                        required*/}
-                {/*                        fullWidth*/}
-                {/*                        label="Tên sản phẩm"*/}
-                {/*                        autoComplete="name product"*/}
-                {/*                        onChange={handleChangeNameProduct}*/}
-                {/*                    />*/}
+                {/*                    <FormControl className={classes.formControl}>*/}
+                {/*                        <InputLabel id="demo-simple-select-label">Age</InputLabel>*/}
+                {/*                        <Select*/}
+                {/*                            labelId="demo-simple-select-label"*/}
+                {/*                            id="demo-simple-select"*/}
+                {/*                            value={age}*/}
+                {/*                            onChange={handleChangeCategories}*/}
+                {/*                        >*/}
+                {/*                            <MenuItem value={10}>Giò</MenuItem>*/}
+                {/*                            <MenuItem value={20}>Chả</MenuItem>*/}
+                {/*                            <MenuItem value={30}>Bánh trưng</MenuItem>*/}
+                {/*                            <MenuItem value={30}>Đồ khô</MenuItem>*/}
+                {/*                            <MenuItem value={30}>Đồ đông lạnh</MenuItem>*/}
+                {/*                        </Select>*/}
+                {/*                    </FormControl>*/}
                 {/*                </Grid>*/}
                 {/*                <Grid item xs={12}>*/}
                 {/*                    <TextField*/}
