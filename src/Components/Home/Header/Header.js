@@ -37,8 +37,9 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-function Header(props) {
+function Header() {
     const classes = useStyles()
+
     return (
         <div>
             <div className={classes.container}>

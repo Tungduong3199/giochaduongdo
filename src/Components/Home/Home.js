@@ -8,7 +8,7 @@ function Home() {
     return (
         <div>
             <Header/>
-            <div style={{backgroundColor:'#f5f5f5'}}>
+            <div style={{backgroundColor: '#f5f5f5'}}>
                 <Banner/>
                 <Content/>
             </div>
