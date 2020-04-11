@@ -30,7 +30,7 @@ export default function ProductDetails({img}) {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        Lizard
+                        Giò lụa
                     </Typography>
                 </CardContent>
             </CardActionArea>

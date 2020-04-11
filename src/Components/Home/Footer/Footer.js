@@ -79,14 +79,16 @@ function Footer(props) {
                     <Grid item sm={12}>
                         <Typography variant={'body1'} style={{fontSize: 20, fontFamily: 'segoe-ui'}} gutterBottom>
                             Follow Us:<br/>
-                            <a href={'https://www.facebook.com/Gi%C3%B2-Ch%E1%BA%A3-D%C6%B0%C6%A1ng-%C4%90%E1%BB%97-103531264652067/?modal=admin_todo_tour'}>
+                            <a target={'_blank'}
+                               href={'https://www.facebook.com/Gi%C3%B2-Ch%E1%BA%A3-D%C6%B0%C6%A1ng-%C4%90%E1%BB%97-103531264652067/?modal=admin_todo_tour'}>
                                 <Facebook style={{color: '#3c5998', width: 40, height: 40}}/>
                             </a>
-                            <a href={'https://www.youtube.com/?gl=VN'}><YouTube style={{color: '#db2d29', width: 40, height: 40}}/></a>
-                            <a href={'https://twitter.com/explore'}>
+                            <a target={'_blank'} href={'https://www.youtube.com/?gl=VN'}><YouTube
+                                style={{color: '#db2d29', width: 40, height: 40}}/></a>
+                            <a target={'_blank'} href={'https://twitter.com/explore'}>
                                 <Twitter style={{color: '#29a9e0', width: 40, height: 40}}/>
                             </a>
-                            <a href={'https://www.instagram.com/'}>
+                            <a target={'_blank'} href={'https://www.instagram.com/'}>
                                 <Instagram style={{color: 'brown', width: 40, height: 40}}/>
                             </a>
                         </Typography>

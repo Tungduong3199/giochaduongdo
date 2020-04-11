@@ -89,7 +89,7 @@ export default function Topic() {
     const classes = useStyles();
 
     return (
-        <div style={{margin: '0 15px 0 0'}}>
+        <div style={{margin: '0 15px 0 -12px'}}>
             <div className={classes.topic}>
                 <PlayCircleOutline/> <span style={{marginLeft: 10}}>Danh Mục Sản Phẩm</span>
                 <div className={classes.before}></div>
