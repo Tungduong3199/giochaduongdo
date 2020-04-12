@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from "../Home/Header/Header";
-import Footer from "../Home/Footer/Footer";
 import {makeStyles} from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,8 +11,14 @@ import {useHistory} from 'react-router-dom'
 import {firestore} from '../../firebaseConfig'
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
+import Topic from "../Home/Banner/Topic";
 
 const useStyles = makeStyles((theme) => ({
+    container: {
+        marginTop: 50,
+        width: 1170,
+        margin: '0 auto'
+    },
     paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
@@ -42,6 +47,8 @@ function AddCategories(props) {
     const [cate, setCate] = useState('')
     const [check, setCheck] = useState(false)
     const [open, setOpen] = useState(false)
+    const [arr, setArr] = useState([])
+    const [getData, setGetData] = useState(false)
 
     function to_slug(str) {
         str = str.toLowerCase();
@@ -66,7 +73,8 @@ function AddCategories(props) {
     const handleUpdate = (e) => {
         try {
             firestore.collection('categories')
-                .add({
+                .doc(`${arr.length + 1}`)
+                .set({
                     key: to_slug(cate),
                     name: cate
                 })
@@ -75,6 +83,7 @@ function AddCategories(props) {
         } finally {
             setOpen(true)
             setCate('')
+            setGetData(!getData)
             e.preventDefault()
         }
     }
@@ -84,73 +93,105 @@ function AddCategories(props) {
         setCheck(true)
     }
 
+    const getCategories = async () => {
+        try {
+            let data = []
+            await firestore.collection('categories')
+                .get()
+                .then((querySnapshot) =>
+                    querySnapshot.forEach((doc) => {
+                        console.log(doc.data())
+                        data.push(doc.data())
+                    }))
+            setArr([...data])
+        } catch (e) {
+            console.log(e.message());
+        }
+    }
+
+    useEffect(() => {
+        getCategories()
+    }, [getData])
+
     return (
         <div>
             <Header/>
-            <div style={{backgroundColor: '#f5f5f5', marginTop: 50}}>
-                <Container component="main" maxWidth="xs">
-                    <CssBaseline/>
-                    <div className={classes.paper}>
-                        <Typography component="h1" variant="h5">
-                            Thêm Danh Mục
-                        </Typography>
-                        <form className={classes.form} noValidate>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        error={check === true && cate === '' ? true : false}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        value={cate}
-                                        label="Tên danh mục"
-                                        autoComplete="name product"
-                                        onChange={handleChangeCate}
-                                    />
+            <Grid container sm={12} className={classes.container}>
+                <Grid item sm={4}>
+                    <Container component="main" maxWidth="xs">
+                        <CssBaseline/>
+                        <div className={classes.paper}>
+                            <Typography component="h1" variant="h5" style={{marginBottom: 20}}>
+                                Thêm Danh Mục
+                            </Typography>
+                            <form className={classes.form} noValidate>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            error={check === true && cate === '' ? true : false}
+                                            variant="outlined"
+                                            required
+                                            fullWidth
+                                            value={cate}
+                                            label="Tên danh mục"
+                                            autoComplete="name product"
+                                            onChange={handleChangeCate}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}
+                                          style={{display: check ? 'block' : 'none', color: 'red'}}
+                                          className={classes.error}
+                                          justify={"flex-end"}>
+                                        Bạn cần phải điền đầy đủ thông tin !
+                                    </Grid>
+                                    <Grid item xs>
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                            className={classes.submit}
+                                            onClick={cate
+                                                ? handleUpdate
+                                                : handleShowError}
+                                            style={{margin: 'auto', display: 'block'}}
+                                        >
+                                            Thêm
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs>
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                            className={classes.submit}
+                                            style={{margin: 'auto', display: 'block'}}
+                                            onClick={() => history.push('/')}
+                                        >
+                                            Thoát
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={12}
-                                      style={{display: check ? 'block' : 'none', color: 'red'}}
-                                      className={classes.error}
-                                      justify={"flex-end"}>
-                                    Bạn cần phải điền đầy đủ thông tin !
-                                </Grid>
-                                <Grid item xs={7}>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className={classes.submit}
-                                        onClick={cate
-                                            ? handleUpdate
-                                            : handleShowError}
-                                        style={{margin: 'auto', display: 'block'}}
-                                    >
-                                        Cập nhật
-                                    </Button>
-                                </Grid>
-                                <Grid item xs={5}>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        className={classes.submit}
-                                        style={{margin: 'auto', display: 'block'}}
-                                        onClick={() => history.push('/')}
-                                    >
-                                        Thoát
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </form>
+                            </form>
+                        </div>
+                    </Container>
+                </Grid>
+                <Grid item sm={8}>
+                    <Typography variant={'h5'} align={'center'} gutterBottom>Danh Mục Hiện Tại</Typography>
+                    <div style={{width: '100%', height: '100%', borderRadius: 10, backgroundColor: '#fff'}}>
+                        <div style={{width: 300, margin: '0 auto', marginTop: 20, paddingTop: 30}}>
+                            <Topic arr={arr}/>
+                        </div>
                     </div>
-                </Container>
+                </Grid>
+
                 <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)}>
                     <Alert onClose={() => setOpen(false)} severity="success">
                         Thêm danh mục thành công !
                     </Alert>
                 </Snackbar>
-            </div>
-            <div className={classes.footer}>
-                <Footer/>
-            </div>
+
+            </Grid>
+            {/*<div className={classes.footer}>*/}
+            {/*    <Footer/>*/}
+            {/*</div>*/}
         </div>
     );
 }
