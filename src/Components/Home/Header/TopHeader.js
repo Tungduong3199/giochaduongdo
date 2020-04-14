@@ -40,14 +40,17 @@ function TopHeader() {
     const classes = useStyles()
     const history = useHistory();
     const [user, setUser] = useState('')
+
     const getUserData = () => {
         try {
-            firestore.collection('user')
-                .doc(auth.currentUser.email)
-                .get()
-                .then(function (doc) {
-                    setUser({...doc.data()})
-                })
+            if (auth.currentUser) {
+                firestore.collection('user')
+                    .doc(auth.currentUser.email)
+                    .get()
+                    .then(function (doc) {
+                        setUser({...doc.data()})
+                    })
+            }
         } catch (e) {
             console.log(e);
         }

@@ -9,6 +9,7 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 import {useDocument} from "react-firebase-hooks/firestore";
 import Profile from "./Components/Login/Profile";
 import AddProduct from "./Components/Add Product/AddProduct";
+import AddCategories from './Components/Add Categories/AddCategories'
 
 async function _loadAssetsAsync() {
     return Promise.all([
@@ -65,6 +66,7 @@ function App() {
             <Route path={'/login'} component={Login}/>
             <Route path={'/profile'} component={Profile}/>
             <Route path={'/add-product'} component={AddProduct}/>
+            <Route path={'/add-categories'} component={AddCategories}/>
         </Switch>
     );
 }

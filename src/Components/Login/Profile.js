@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import {makeStyles} from "@material-ui/core/styles";
-import {firestore} from '../../firebaseConfig'
+import {auth, firestore} from '../../firebaseConfig'
 import {useGlobal} from 'reactn'
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from '@material-ui/lab/Alert';
@@ -34,11 +34,13 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#245a46',
         color: '#fff'
     },
-    // footer: {
-    //     position: 'absolute',
-    //     bottom: 0,
-    //     width: '100%'
-    // }
+    footer: {
+        [theme.breakpoints.up('xl')]: {
+            position: 'absolute',
+            bottom: 0,
+            width: '100%'
+        }
+    }
 }));
 
 function Alert(props) {
@@ -104,19 +106,23 @@ function Profile(props) {
 
     const getDataProfile = async () => {
         try {
-            const result = await firestore
-                .collection('user')
-                .doc(authUser.email)
-                .get()
-            setAddress(result.data().address)
-            setEmail(result.data().email)
-            setLastName(result.data().lastName)
-            setFirstName(result.data().firstName)
-            setPhoneNumber(result.data().phoneNumber)
+            if (authUser) {
+                const result = await firestore
+                    .collection('user')
+                    .doc(authUser.email)
+                    .get()
+                setAddress(result.data().address)
+                setEmail(result.data().email)
+                setLastName(result.data().lastName)
+                setFirstName(result.data().firstName)
+                setPhoneNumber(result.data().phoneNumber)
+            }
         } catch (e) {
             console.log(e);
         }
     }
+
+    console.log(auth.currentUser)
 
     useEffect(() => {
         getDataProfile()

@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Topic() {
+export default function Topic({arr}) {
     const classes = useStyles();
 
     return (
@@ -95,44 +95,54 @@ export default function Topic() {
                 <div className={classes.before}></div>
             </div>
             <ul className={classes.ul}>
-                <li className={classes.li}>Giò<ArrowRight className={classes.iconArrow}/>
-                    <ul className={classes.ulCon}>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                    </ul>
-                </li>
-                <li className={classes.li}>Chả<ArrowRight className={classes.iconArrow}/>
-                    <ul className={classes.ulCon}
-                        style={{height: 550,flexWrap: 'wrap', width: 850, top: 53}}>
-                        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>
-                        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>
-                        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>
-                        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>
-                        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>
-                        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>
-                        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>
-                        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>
-                    </ul>
-                </li>
-                <li className={classes.li}>Bánh Chưng</li>
-                <li className={classes.li}>Đồ Khô<ArrowRight className={classes.iconArrow}/>
-                    <ul className={classes.ulCon} style={{top: 161}}>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                    </ul>
-                </li>
-                <li className={classes.li}>Đồ Đông Lạnh<ArrowRight className={classes.iconArrow}/>
-                    <ul className={classes.ulCon} style={{top: 215}}>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                        <li className={classes.liCon}><TopicDetails/></li>
-                    </ul>
-                </li>
+                {arr.map(value => (
+                    <li className={classes.li}>{value.name}<ArrowRight className={classes.iconArrow}/>
+                        <ul className={classes.ulCon}>
+                            <li className={classes.liCon}><TopicDetails/></li>
+                            <li className={classes.liCon}><TopicDetails/></li>
+                            <li className={classes.liCon}><TopicDetails/></li>
+                            <li className={classes.liCon}><TopicDetails/></li>
+                        </ul>
+                    </li>
+                ))}
+                {/*<li className={classes.li}>Giò<ArrowRight className={classes.iconArrow}/>*/}
+                {/*    <ul className={classes.ulCon}>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*    </ul>*/}
+                {/*</li>*/}
+                {/*<li className={classes.li}>Chả<ArrowRight className={classes.iconArrow}/>*/}
+                {/*    <ul className={classes.ulCon}*/}
+                {/*        style={{height: 550,flexWrap: 'wrap', width: 850, top: 53}}>*/}
+                {/*        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon} style={{margin: '0 15px 0 -5px'}}><TopicDetails/></li>*/}
+                {/*    </ul>*/}
+                {/*</li>*/}
+                {/*<li className={classes.li}>Bánh Chưng</li>*/}
+                {/*<li className={classes.li}>Đồ Khô<ArrowRight className={classes.iconArrow}/>*/}
+                {/*    <ul className={classes.ulCon} style={{top: 161}}>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*    </ul>*/}
+                {/*</li>*/}
+                {/*<li className={classes.li}>Đồ Đông Lạnh<ArrowRight className={classes.iconArrow}/>*/}
+                {/*    <ul className={classes.ulCon} style={{top: 215}}>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*        <li className={classes.liCon}><TopicDetails/></li>*/}
+                {/*    </ul>*/}
+                {/*</li>*/}
             </ul>
         </div>
     );

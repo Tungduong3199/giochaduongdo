@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Topic from "./Topic";
 import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core/styles";
@@ -6,6 +6,7 @@ import Slider from './Slider'
 import anh3 from '../../../Images/kinh-doanh-gio-cha-1.jpg'
 import anh4 from '../../../Images/unnamed.jpg'
 import {DoneOutline, DriveEta, PhoneInTalk} from "@material-ui/icons";
+import {firestore} from '../../../firebaseConfig'
 
 const useStyles = makeStyles({
     container: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles({
         fontWeight: 500
     },
     icon: {
-        color:'#245a46',
+        color: '#245a46',
         width: 35,
         height: 35,
         marginRight: 10
@@ -50,11 +51,31 @@ const useStyles = makeStyles({
 
 function Banner(props) {
     const classes = useStyles();
+    const [categories, setCategories] = useState([])
 
+    const getDataCate = async () => {
+        try {
+            let data = []
+            const result = await firestore.collection('categories')
+                .get()
+            if (result) {
+                result.forEach((doc) =>
+                    data.push(doc.data())
+                )
+            }
+            setCategories(data)
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        getDataCate()
+    }, [])
     return (
         <Grid container sm={12} className={classes.container}>
             <Grid item xs={3}>
-                <Topic/>
+                <Topic arr={categories}/>
             </Grid>
             <Grid item xs={6}>
                 <Slider/>

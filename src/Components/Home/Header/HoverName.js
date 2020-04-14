@@ -48,9 +48,14 @@ export default function HoverName({admin}) {
             <ArrowDropUp className={classes.icon}/>
             <List component="nav" aria-label="secondary mailbox folders">
                 {admin
-                    ? <div><ListItem onClick={() => history.push('/add-product')} className={classes.text} button>
-                        <ListItemText primary="Thêm sản phẩm"/>
-                    </ListItem>
+                    ? <div>
+                        <ListItem onClick={() => history.push('/add-product')} className={classes.text} button>
+                            <ListItemText primary="Thêm sản phẩm"/>
+                        </ListItem>
+                        <Divider/>
+                        <ListItem onClick={() => history.push('/add-categories')} className={classes.text} button>
+                            <ListItemText primary="Thêm danh mục"/>
+                        </ListItem>
                         <Divider/>
                     </div>
                     : null}
