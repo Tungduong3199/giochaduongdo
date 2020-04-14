@@ -34,11 +34,11 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#245a46',
         color: '#fff'
     },
-    footer: {
-        position: 'absolute',
-        bottom: 0,
-        width: '100%'
-    }
+    // footer: {
+    //     position: 'absolute',
+    //     bottom: 0,
+    //     width: '100%'
+    // }
 }));
 
 function Alert(props) {
