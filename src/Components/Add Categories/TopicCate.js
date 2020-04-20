@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {ArrowRight, PlayCircleOutline} from "@material-ui/icons";
-import TopicDetails from "./TopicDetails";
-import {firestore} from '../../../firebaseConfig'
-import {PropagateLoader} from "react-spinners";
-import Typography from "@material-ui/core/Typography";
+import {Delete, Edit, PlayCircleOutline} from "@material-ui/icons";
+import {firestore} from '../../firebaseConfig'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -104,11 +101,17 @@ const load = {
 }
 
 
-export default function Topic({arr}) {
+export default function TopicCate({arr}) {
     const classes = useStyles();
     const [cate, setCate] = useState('')
     const [product, setProduct] = useState([])
     const [loading, setLoading] = useState(false)
+
+    function handleClick(e) {
+        firestore.collection('categories')
+            .where('key', '==', e)
+            .delete()
+    }
 
     const getDataTopic = async () => {
         setLoading(true)
@@ -145,27 +148,11 @@ export default function Topic({arr}) {
             </div>
             <ul className={classes.ul}>
                 {arr.map(value => (
-                    <li onMouseOver={() => setCate(value.key)} className={classes.li}>{value.name}<ArrowRight
-                        className={classes.iconArrow}/>
-                        <ul className={classes.ulCon}
-                            style={{
-                                paddingBottom: 15,
-                                height: 620,
-                                flexWrap: 'wrap',
-                                width: 850,
-                                backgroundColor: '#245a46'
-                            }}>
-                            {loading
-                                ? <PropagateLoader css={load} type={"bars"} color={'#ffffff'}/>
-                                : product.length === 0
-                                    ? <Typography variant={"h5"} gutterBottom className={classes.text}>Không có sản phẩm
-                                        nào !</Typography>
-                                    : product.map(value1 =>
-                                        <li className={classes.liCon} style={{margin: '17px 15px 0 -7px'}}><TopicDetails
-                                            name={value1.name} price={value1.price} img={value1.productAvt}/></li>
-                                    )
-                            }
-                        </ul>
+                    <li className={classes.li}>{value.name}
+                        <Edit className={classes.iconArrow}/>
+                        <Delete className={classes.iconArrow} onClick={() => {
+                            handleClick(value.key)
+                        }}/>
                     </li>
                 ))}
             </ul>

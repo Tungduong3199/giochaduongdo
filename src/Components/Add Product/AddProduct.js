@@ -1,7 +1,24 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from "../Home/Header/Header";
-import Footer from "../Home/Footer/Footer";
 import {makeStyles} from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import {firestore, storage} from '../../firebaseConfig'
+import CurrencyFormat from 'react-currency-format';
+import Alert from "@material-ui/lab/Alert";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import * as firebase from "firebase";
+import ImageUploader from 'react-images-upload';
+import Footer from "../Home/Footer/Footer";
 
 const useStyles = makeStyles((theme) => ({
     footer: {
@@ -13,101 +30,313 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         minWidth: 120,
     },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+        backgroundColor: '#245a46',
+        color: '#fff'
+    },
+    price: {
+        width: '100%',
+        height: 56,
+        borderRadius: 5,
+        backgroundColor: 'rgb(250, 250, 250)',
+        border: '1px solid rgb(192, 192, 192)',
+        paddingLeft: 15,
+        fontSize: 15
+    },
+    inputImg: {
+        border: '1px solid rgb(192, 192, 192)',
+        padding: 10,
+        borderRadius: 5,
+        position: 'relative',
+        paddingLeft: 40,
+        backgroundColor: '#d2d2d2',
+        cursor: 'pointer'
+    },
+    iconUpload: {
+        position: 'absolute',
+        left: 10,
+        bottom: 7,
+        color: '#245a46'
+    },
+    iconDelete: {
+        position: 'absolute',
+        right: 2,
+        top: 2,
+        cursor: 'pointer',
+        backgroundColor: '#245a46',
+        color: '#fff',
+        borderRadius: 12
+    }
 }))
 
 function AddProduct(props) {
     const classes = useStyles();
+    const [arrCate, setArrCate] = useState([])
+    const [cate, setCate] = useState('')
+    const [name, setName] = useState('')
+    const [price, setPrice] = useState('')
+    const [descrided, setDescrided] = useState('')
+    const [check, setCheck] = useState(false)
+    const [open, setOpen] = useState(false)
+    const [productAvt, setProductAvt] = useState('')
+    const [picture, setPicture] = useState([])
+    const [preview, setPreview] = useState(false)
+    const [load, setLoad] = useState(false)
+
+    function handleChangeCategories(e) {
+        setCate(e.target.value)
+    }
+
+    function handleChangeNameProduct(e) {
+        setName(e.target.value)
+    }
+
+    function handleChangePrice(e) {
+        setPrice(e.target.value)
+    }
+
+    function handleChangeDescrided(e) {
+        setDescrided(e.target.value)
+    }
+
+    const getCate = async () => {
+        try {
+            let data = []
+            const result = await firestore
+                .collection('categories')
+                .get()
+            if (result) {
+                result.forEach(doc =>
+                    data.push(doc.data())
+                )
+            }
+            setArrCate([...data])
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const creatProduct = (e) => {
+        if (name === '' || cate === '') {
+            setCheck(true)
+            e.preventDefault()
+        } else {
+            try {
+                firestore.collection('products')
+                    .add({
+                        key: cate,
+                        name: name,
+                        price: price,
+                        descrided: descrided,
+                        picture: picture,
+                        productAvt: productAvt
+                    })
+            } catch (e) {
+                console.log(e);
+            } finally {
+                e.preventDefault()
+                setOpen(true)
+                setPrice('')
+                setName('')
+                setDescrided('')
+                setPicture([])
+                setProductAvt('')
+                setPreview(false)
+            }
+        }
+    }
+
+    const onDrop = async (e) => {
+        setLoad(true)
+        setPicture([])
+        setPreview(true)
+        let data = []
+        for (let i = 0, f; f = e[i]; i++) {
+            const uploadTask = storage.ref().child('images/' + f.name).put(f);
+            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+                function (snapshot) {
+                    switch (snapshot.state) {
+                        case firebase.storage.TaskState.PAUSED:
+                            break;
+                        case firebase.storage.TaskState.RUNNING:
+                            break;
+                    }
+                }, function (error) {
+                    switch (error.code) {
+                        case 'storage/unauthorized':
+                            break;
+
+                        case 'storage/canceled':
+                            break;
+
+                        case 'storage/unknown':
+                            break;
+                    }
+                }, function () {
+                    uploadTask.snapshot.ref.getDownloadURL().then(function (photoURL) {
+                        data.push(photoURL)
+                        setPicture([...data])
+                    });
+                });
+        }
+        setLoad(false)
+    }
+
+    const addProductAvatar = (event) => {
+        setLoad(true)
+        let file = event.target.files[0]
+        const uploadTask = storage.ref().child('images/' + file.name).put(file);
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+            function (snapshot) {
+                const progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100) + 1;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED: // or 'paused'
+                        console.log('Upload is paused');
+                        break;
+                    case firebase.storage.TaskState.RUNNING: // or 'running'
+                        console.log('Upload is running');
+                        break;
+                }
+            }, function (error) {
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                        // User doesn't have permission to access the object
+                        break;
+
+                    case 'storage/canceled':
+                        // User canceled the upload
+                        break;
+
+                    case 'storage/unknown':
+                        // Unknown error occurred, inspect error.serverResponse
+                        break;
+                }
+            }, function () {
+                // Upload completed successfully, now we can get the download URL
+                uploadTask.snapshot.ref.getDownloadURL().then(function (photoURL) {
+                    console.log('File available at', photoURL);
+                    setProductAvt(photoURL)
+                });
+            });
+        setLoad(false)
+    }
+
+    useEffect(() => {
+        getCate()
+    }, [])
+
     return (
         <div>
             <Header/>
-            <div style={{backgroundColor: '#f5f5f5'}}>
-                {/*<Container component="main" maxWidth="xs">*/}
-                {/*    <CssBaseline/>*/}
-                {/*    <div className={classes.paper}>*/}
-                {/*        <Typography component="h1" variant="h5">*/}
-                {/*            Đăng Ký*/}
-                {/*        </Typography>*/}
-                {/*        <form className={classes.form} noValidate>*/}
-                {/*            <Grid container spacing={2}>*/}
-                {/*                <Grid item xs={12}>*/}
-                {/*                    <FormControl className={classes.formControl}>*/}
-                {/*                        <InputLabel id="demo-simple-select-label">Age</InputLabel>*/}
-                {/*                        <Select*/}
-                {/*                            labelId="demo-simple-select-label"*/}
-                {/*                            id="demo-simple-select"*/}
-                {/*                            value={age}*/}
-                {/*                            onChange={handleChangeCategories}*/}
-                {/*                        >*/}
-                {/*                            <MenuItem value={10}>Giò</MenuItem>*/}
-                {/*                            <MenuItem value={20}>Chả</MenuItem>*/}
-                {/*                            <MenuItem value={30}>Bánh trưng</MenuItem>*/}
-                {/*                            <MenuItem value={30}>Đồ khô</MenuItem>*/}
-                {/*                            <MenuItem value={30}>Đồ đông lạnh</MenuItem>*/}
-                {/*                        </Select>*/}
-                {/*                    </FormControl>*/}
-                {/*                </Grid>*/}
-                {/*                <Grid item xs={12}>*/}
-                {/*                    <TextField*/}
-                {/*                        error={check === true && phoneNumber === '' ? true : false}*/}
-                {/*                        variant="outlined"*/}
-                {/*                        required*/}
-                {/*                        fullWidth*/}
-                {/*                        type={'number'}*/}
-                {/*                        label="Tên sản phẩm"*/}
-                {/*                        autoComplete="name product"*/}
-                {/*                        onChange={handleChangeNameProduct}*/}
-                {/*                    />*/}
-                {/*                </Grid>*/}
-                {/*                <Grid item xs={12}>*/}
-                {/*                    <TextField*/}
-                {/*                        variant="outlined"*/}
-                {/*                        required*/}
-                {/*                        error={check === true && email === '' ? true : false}*/}
-                {/*                        fullWidth*/}
-                {/*                        id="email"*/}
-                {/*                        label="Email"*/}
-                {/*                        name="email"*/}
-                {/*                        autoComplete="email"*/}
-                {/*                        onChange={handleChangeEmail}*/}
-                {/*                    />*/}
-                {/*                </Grid>*/}
-                {/*                <Grid item xs={12}>*/}
-                {/*                    <TextField*/}
-                {/*                        variant="outlined"*/}
-                {/*                        required*/}
-                {/*                        fullWidth*/}
-                {/*                        error={check === true && password === '' ? true : false}*/}
-                {/*                        name="password"*/}
-                {/*                        label="Mật Khẩu"*/}
-                {/*                        type="password"*/}
-                {/*                        id="password"*/}
-                {/*                        autoComplete="current-password"*/}
-                {/*                        onChange={handleChangePassword}*/}
-                {/*                    />*/}
-                {/*                </Grid>*/}
-                {/*                <Grid item xs={12}*/}
-                {/*                      style={{display: check ? 'block' : 'none'}}*/}
-                {/*                      className={classes.error}*/}
-                {/*                      justify={"flex-end"}>*/}
-                {/*                    Bạn cần phải điền đầy đủ thông tin !*/}
-                {/*                </Grid>*/}
-                {/*            </Grid>*/}
-                {/*            <Button*/}
-                {/*                type="submit"*/}
-                {/*                fullWidth*/}
-                {/*                variant="contained"*/}
-                {/*                className={classes.submit}*/}
-                {/*                onClick={createAcc}*/}
-                {/*            >*/}
-                {/*                Đăng Ký*/}
-                {/*            </Button>*/}
-                {/*        </form>*/}
-                {/*    </div>*/}
-                {/*</Container>*/}
+            <div style={{paddingTop: 50}}>
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline/>
+                    <div className={classes.paper}>
+                        <Typography align={'center'} component="h1" variant="h5">
+                            Thêm Sản Phẩm
+                        </Typography>
+                        <form className={classes.form} noValidate>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <FormControl className={classes.formControl}
+                                                 error={check === true && cate === '' ? true : false}>
+                                        <InputLabel id="demo-simple-select-label">Danh mục</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            onChange={handleChangeCategories}
+                                        >
+                                            {
+                                                arrCate.map(value =>
+                                                    <MenuItem value={value.key}>{value.name}</MenuItem>
+                                                )
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        error={check === true && name === '' ? true : false}
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        value={name}
+                                        label="Tên sản phẩm"
+                                        autoComplete="name product"
+                                        onChange={handleChangeNameProduct}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <CurrencyFormat placeholder={"Giá sản phẩm"} value={price} className={classes.price}
+                                                    onChange={handleChangePrice}
+                                                    thousandSeparator={true} suffix={' đ'}/>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        id="outlined-multiline-static"
+                                        variant="outlined"
+                                        fullWidth
+                                        label="Mô tả"
+                                        onChange={handleChangeDescrided}
+                                        value={descrided}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} style={{marginTop: 10}}>
+                                    <input style={{display: 'none'}} id="img" type="file" onChange={addProductAvatar}/>
+                                    <label htmlFor="img" className={classes.inputImg}>
+                                        <CloudUploadIcon className={classes.iconUpload}/> Thêm ảnh đại diện sản phẩm
+                                    </label>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    {productAvt
+                                        ? <img src={productAvt} width={100} height={100}/>
+                                        : null
+                                    }
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <ImageUploader
+                                        withIcon={true}
+                                        buttonText='Chọn ảnh'
+                                        onChange={onDrop}
+                                        label={'Thêm ảnh chi tiết'}
+                                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                                        maxFileSize={5242880}
+                                        withPreview={preview}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}
+                                      style={{
+                                          display: check ? 'block' : 'none',
+                                          color: 'red'
+                                      }}
+                                >
+                                    Bạn cần phải điền đầy đủ thông tin !
+                                </Grid>
+                            </Grid>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                className={classes.submit}
+                                onClick={creatProduct}
+                                disabled={load}
+                            >
+                                Thêm sản phẩm
+                            </Button>
+                        </form>
+                    </div>
+                </Container>
             </div>
-            <div className={classes.footer}>
+            <div>
                 <Footer/>
             </div>
+            <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)}>
+                <Alert onClose={() => setOpen(false)} variant="filled" severity="success">
+                    Thêm sản phẩm thành công !
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
