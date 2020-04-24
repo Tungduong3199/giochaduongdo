@@ -5,6 +5,7 @@ import TopicDetails from "./TopicDetails";
 import {firestore} from '../../../firebaseConfig'
 import {PropagateLoader} from "react-spinners";
 import Typography from "@material-ui/core/Typography";
+import {useHistory} from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -106,9 +107,16 @@ const load = {
 
 export default function Topic({arr}) {
     const classes = useStyles();
+    const history = useHistory()
     const [cate, setCate] = useState('')
     const [product, setProduct] = useState([])
     const [loading, setLoading] = useState(false)
+
+    const handleClick = (value) => {
+        localStorage.cate = value.key
+        localStorage.name = value.name
+        history.push(`/product/${localStorage.cate}/${localStorage.name}`)
+    }
 
     const getDataTopic = async () => {
         setLoading(true)
@@ -161,7 +169,8 @@ export default function Topic({arr}) {
                                     ? <Typography variant={"h5"} gutterBottom className={classes.text}>Không có sản phẩm
                                         nào !</Typography>
                                     : product.map(value1 =>
-                                        <li className={classes.liCon} style={{margin: '17px 15px 0 -7px'}}><TopicDetails
+                                        <li className={classes.liCon} onClick={() => handleClick(value1)}
+                                            style={{margin: '17px 15px 0 -7px'}}><TopicDetails
                                             name={value1.name} price={value1.price} img={value1.productAvt}/></li>
                                     )
                             }

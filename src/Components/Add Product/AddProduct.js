@@ -17,8 +17,9 @@ import Alert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import * as firebase from "firebase";
-import ImageUploader from 'react-images-upload';
 import Footer from "../Home/Footer/Footer";
+import {v4 as uuidv4} from 'uuid';
+import Files from "react-butterfiles";
 
 const useStyles = makeStyles((theme) => ({
     footer: {
@@ -81,8 +82,6 @@ function AddProduct(props) {
     const [open, setOpen] = useState(false)
     const [productAvt, setProductAvt] = useState('')
     const [picture, setPicture] = useState([])
-    const [preview, setPreview] = useState(false)
-    const [load, setLoad] = useState(false)
 
     function handleChangeCategories(e) {
         setCate(e.target.value)
@@ -130,7 +129,8 @@ function AddProduct(props) {
                         price: price,
                         descrided: descrided,
                         picture: picture,
-                        productAvt: productAvt
+                        productAvt: productAvt,
+                        id: uuidv4()
                     })
             } catch (e) {
                 console.log(e);
@@ -142,49 +142,45 @@ function AddProduct(props) {
                 setDescrided('')
                 setPicture([])
                 setProductAvt('')
-                setPreview(false)
             }
         }
     }
 
-    const onDrop = async (e) => {
-        setLoad(true)
-        setPicture([])
-        setPreview(true)
+    const onDrop = (e) => {
         let data = []
-        for (let i = 0, f; f = e[i]; i++) {
-            const uploadTask = storage.ref().child('images/' + f.name).put(f);
-            uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-                function (snapshot) {
-                    switch (snapshot.state) {
-                        case firebase.storage.TaskState.PAUSED:
-                            break;
-                        case firebase.storage.TaskState.RUNNING:
-                            break;
-                    }
-                }, function (error) {
-                    switch (error.code) {
-                        case 'storage/unauthorized':
-                            break;
+        e.forEach(doc => {
+                const uploadTask = storage.ref().child('images/' + doc.src.file.name).put(doc.src.file);
+                uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+                    function (snapshot) {
+                        console.log(snapshot)
+                        switch (snapshot.state) {
+                            case firebase.storage.TaskState.PAUSED:
+                                break;
+                            case firebase.storage.TaskState.RUNNING:
+                                break;
+                        }
+                    }, function (error) {
+                        switch (error.code) {
+                            case 'storage/unauthorized':
+                                break;
 
-                        case 'storage/canceled':
-                            break;
+                            case 'storage/canceled':
+                                break;
 
-                        case 'storage/unknown':
-                            break;
-                    }
-                }, function () {
-                    uploadTask.snapshot.ref.getDownloadURL().then(function (photoURL) {
-                        data.push(photoURL)
-                        setPicture([...data])
-                    });
-                });
-        }
-        setLoad(false)
+                            case 'storage/unknown':
+                                break;
+                        }
+                    }, function () {
+                        uploadTask.snapshot.ref.getDownloadURL().then(function (photoURL) {
+                            data.push(photoURL)
+                            setPicture([...data])
+                        });
+                    })
+            }
+        )
     }
 
     const addProductAvatar = (event) => {
-        setLoad(true)
         let file = event.target.files[0]
         const uploadTask = storage.ref().child('images/' + file.name).put(file);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
@@ -192,35 +188,30 @@ function AddProduct(props) {
                 const progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100) + 1;
                 console.log('Upload is ' + progress + '% done');
                 switch (snapshot.state) {
-                    case firebase.storage.TaskState.PAUSED: // or 'paused'
+                    case firebase.storage.TaskState.PAUSED:
                         console.log('Upload is paused');
                         break;
-                    case firebase.storage.TaskState.RUNNING: // or 'running'
+                    case firebase.storage.TaskState.RUNNING:
                         console.log('Upload is running');
                         break;
                 }
             }, function (error) {
                 switch (error.code) {
                     case 'storage/unauthorized':
-                        // User doesn't have permission to access the object
                         break;
 
                     case 'storage/canceled':
-                        // User canceled the upload
                         break;
 
                     case 'storage/unknown':
-                        // Unknown error occurred, inspect error.serverResponse
                         break;
                 }
             }, function () {
-                // Upload completed successfully, now we can get the download URL
                 uploadTask.snapshot.ref.getDownloadURL().then(function (photoURL) {
                     console.log('File available at', photoURL);
                     setProductAvt(photoURL)
                 });
             });
-        setLoad(false)
     }
 
     useEffect(() => {
@@ -269,7 +260,8 @@ function AddProduct(props) {
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <CurrencyFormat placeholder={"Giá sản phẩm"} value={price} className={classes.price}
+                                    <CurrencyFormat placeholder={"Giá sản phẩm"} value={price}
+                                                    className={classes.price}
                                                     onChange={handleChangePrice}
                                                     thousandSeparator={true} suffix={' đ'}/>
                                 </Grid>
@@ -284,7 +276,8 @@ function AddProduct(props) {
                                     />
                                 </Grid>
                                 <Grid item xs={12} style={{marginTop: 10}}>
-                                    <input style={{display: 'none'}} id="img" type="file" onChange={addProductAvatar}/>
+                                    <input style={{display: 'none'}} id="img" type="file"
+                                           onChange={addProductAvatar}/>
                                     <label htmlFor="img" className={classes.inputImg}>
                                         <CloudUploadIcon className={classes.iconUpload}/> Thêm ảnh đại diện sản phẩm
                                     </label>
@@ -296,15 +289,41 @@ function AddProduct(props) {
                                     }
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <ImageUploader
-                                        withIcon={true}
-                                        buttonText='Chọn ảnh'
-                                        onChange={onDrop}
-                                        label={'Thêm ảnh chi tiết'}
-                                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                                        maxFileSize={5242880}
-                                        withPreview={preview}
-                                    />
+                                    <Files
+                                        multiple={true}
+                                        accept={["application/pdf", "image/jpg", "image/jpeg", "image/png"]}
+                                        onSuccess={onDrop}
+                                        // onError={errors => this.setState({ errors })}
+                                    >
+                                        {({browseFiles}) => (
+                                            <>
+                                                <button onClick={(e) => {
+                                                    e.preventDefault()
+                                                    browseFiles()
+                                                }}>Upload PDF
+                                                </button>
+                                                <ol>
+                                                    {picture.map(file => (
+                                                        <img src={file}/>
+                                                    ))}
+                                                    {/*{this.state.errors.map(error => (*/}
+                                                    {/*    <li key={error.file.name}>*/}
+                                                    {/*        {error.file.name} - {error.type}*/}
+                                                    {/*    </li>*/}
+                                                    {/*))}*/}
+                                                </ol>
+                                            </>
+                                        )}
+                                    </Files>
+                                    {/*<ImageUploader*/}
+                                    {/*    withIcon={true}*/}
+                                    {/*    buttonText='Chọn ảnh'*/}
+                                    {/*    onChange={onDrop}*/}
+                                    {/*    label={'Thêm ảnh chi tiết'}*/}
+                                    {/*    imgExtension={['.jpg', '.gif', '.png', '.gif','jpeg']}*/}
+                                    {/*    maxFileSize={5242880}*/}
+                                    {/*    withPreview={true}*/}
+                                    {/*/>*/}
                                 </Grid>
                                 <Grid item xs={12}
                                       style={{
@@ -321,7 +340,6 @@ function AddProduct(props) {
                                 variant="contained"
                                 className={classes.submit}
                                 onClick={creatProduct}
-                                disabled={load}
                             >
                                 Thêm sản phẩm
                             </Button>

@@ -13,6 +13,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import Chip from "@material-ui/core/Chip";
 import TopicCate from "./TopicCate";
+import Footer from "../Home/Footer/Footer";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -198,9 +199,9 @@ function AddCategories(props) {
                 </Snackbar>
 
             </Grid>
-            {/*<div className={classes.footer}>*/}
-            {/*    <Footer/>*/}
-            {/*</div>*/}
+            <div className={classes.footer}>
+                <Footer/>
+            </div>
         </div>
     );
 }
