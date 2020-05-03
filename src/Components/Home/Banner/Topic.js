@@ -113,9 +113,10 @@ export default function Topic({arr}) {
     const [loading, setLoading] = useState(false)
 
     const handleClick = (value) => {
+        localStorage.clear()
         localStorage.cate = value.key
-        localStorage.name = value.name
-        history.push(`/product/${localStorage.cate}/${localStorage.name}`)
+        localStorage.id = value.id
+        history.push(`/product/${localStorage.cate}/${value.name}`)
     }
 
     const getDataTopic = async () => {
@@ -123,7 +124,7 @@ export default function Topic({arr}) {
         try {
             let data = []
             const result = await firestore.collection('products')
-                .where('key', '==', cate)
+                .where('cate', '==', cate)
                 .get()
             if (result) {
                 result.forEach(doc => {
@@ -144,7 +145,7 @@ export default function Topic({arr}) {
     useEffect(() => {
         getDataTopic()
     }, [cate])
-
+    console.log(cate);
     return (
         <div style={{margin: '0 15px 0 -12px'}}>
             <div className={classes.topic}>
@@ -153,7 +154,7 @@ export default function Topic({arr}) {
             </div>
             <ul className={classes.ul}>
                 {arr.map(value => (
-                    <li onMouseOver={() => setCate(value.key)} className={classes.li}>{value.name}<ArrowRight
+                    <li onMouseOver={() => setCate(value.name)} className={classes.li}>{value.name}<ArrowRight
                         className={classes.iconArrow}/>
                         <ul className={classes.ulCon}
                             style={{

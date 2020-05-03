@@ -20,6 +20,7 @@ import * as firebase from "firebase";
 import Footer from "../Home/Footer/Footer";
 import {v4 as uuidv4} from 'uuid';
 import Files from "react-butterfiles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
     footer: {
@@ -68,6 +69,17 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#245a46',
         color: '#fff',
         borderRadius: 12
+    },
+    addDetails: {
+        border: '1px solid rgb(192, 192, 192)',
+        paddingLeft: 40,
+        backgroundColor: '#d2d2d2',
+    },
+    imgDetails: {
+        width: 200,
+        height: 200,
+        margin: 'auto',
+        padding: 10
     }
 }))
 
@@ -82,6 +94,8 @@ function AddProduct(props) {
     const [open, setOpen] = useState(false)
     const [productAvt, setProductAvt] = useState('')
     const [picture, setPicture] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [loadingAvt, setLoadingAvt] = useState(false)
 
     function handleChangeCategories(e) {
         setCate(e.target.value)
@@ -124,7 +138,7 @@ function AddProduct(props) {
             try {
                 firestore.collection('products')
                     .add({
-                        key: cate,
+                        cate: cate,
                         name: name,
                         price: price,
                         descrided: descrided,
@@ -147,6 +161,7 @@ function AddProduct(props) {
     }
 
     const onDrop = (e) => {
+        setLoading(true)
         let data = []
         e.forEach(doc => {
                 const uploadTask = storage.ref().child('images/' + doc.src.file.name).put(doc.src.file);
@@ -174,6 +189,7 @@ function AddProduct(props) {
                         uploadTask.snapshot.ref.getDownloadURL().then(function (photoURL) {
                             data.push(photoURL)
                             setPicture([...data])
+                            setLoading(false)
                         });
                     })
             }
@@ -181,6 +197,7 @@ function AddProduct(props) {
     }
 
     const addProductAvatar = (event) => {
+        setLoadingAvt(true)
         let file = event.target.files[0]
         const uploadTask = storage.ref().child('images/' + file.name).put(file);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
@@ -210,6 +227,7 @@ function AddProduct(props) {
                 uploadTask.snapshot.ref.getDownloadURL().then(function (photoURL) {
                     console.log('File available at', photoURL);
                     setProductAvt(photoURL)
+                    setLoadingAvt(false)
                 });
             });
     }
@@ -241,7 +259,7 @@ function AddProduct(props) {
                                         >
                                             {
                                                 arrCate.map(value =>
-                                                    <MenuItem value={value.key}>{value.name}</MenuItem>
+                                                    <MenuItem value={value.name}>{value.name}</MenuItem>
                                                 )
                                             }
                                         </Select>
@@ -283,9 +301,9 @@ function AddProduct(props) {
                                     </label>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    {productAvt
-                                        ? <img src={productAvt} width={100} height={100}/>
-                                        : null
+                                    {loadingAvt
+                                        ? <CircularProgress style={{color: '#245a46'}}/>
+                                        : productAvt && <img src={productAvt} width={100} height={100}/>
                                     }
                                 </Grid>
                                 <Grid item xs={12}>
@@ -297,33 +315,25 @@ function AddProduct(props) {
                                     >
                                         {({browseFiles}) => (
                                             <>
-                                                <button onClick={(e) => {
+                                                <Button className={classes.addDetails} onClick={(e) => {
                                                     e.preventDefault()
                                                     browseFiles()
-                                                }}>Upload PDF
-                                                </button>
-                                                <ol>
-                                                    {picture.map(file => (
-                                                        <img src={file}/>
-                                                    ))}
-                                                    {/*{this.state.errors.map(error => (*/}
-                                                    {/*    <li key={error.file.name}>*/}
-                                                    {/*        {error.file.name} - {error.type}*/}
-                                                    {/*    </li>*/}
-                                                    {/*))}*/}
-                                                </ol>
+                                                }}><CloudUploadIcon className={classes.iconUpload}/>Thêm ảnh Chi tiết
+                                                </Button>
                                             </>
                                         )}
                                     </Files>
-                                    {/*<ImageUploader*/}
-                                    {/*    withIcon={true}*/}
-                                    {/*    buttonText='Chọn ảnh'*/}
-                                    {/*    onChange={onDrop}*/}
-                                    {/*    label={'Thêm ảnh chi tiết'}*/}
-                                    {/*    imgExtension={['.jpg', '.gif', '.png', '.gif','jpeg']}*/}
-                                    {/*    maxFileSize={5242880}*/}
-                                    {/*    withPreview={true}*/}
-                                    {/*/>*/}
+                                </Grid>
+                                <Grid item container xs={12}>
+                                    {
+                                        loading
+                                            ? <CircularProgress style={{color: '#245a46'}}/>
+                                            : picture.map(file => (
+                                                <Grid item xs={6}>
+                                                    <img className={classes.imgDetails} src={file}/>
+                                                </Grid>
+                                            ))
+                                    }
                                 </Grid>
                                 <Grid item xs={12}
                                       style={{

@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
-import {makeStyles, useTheme} from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import {firestore} from '../../firebaseConfig'
+import ItemsCarousel from 'react-items-carousel';
+import ReactImageMagnify from "react-image-magnify";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -31,71 +30,106 @@ TabPanel.propTypes = {
     value: PropTypes.any.isRequired,
 };
 
-function a11yProps(index) {
-    return {
-        id: `full-width-tab-${index}`,
-        'aria-controls': `full-width-tabpanel-${index}`,
-    };
-}
-
 const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.paper,
         width: 500,
+        height: 575
     },
     tabs: {
-        height: 70
+        height: 70,
+        backgroundColor: '#fff'
     },
     tab: {
         height: 70,
+    },
+    carousel: {
+        height: 45
+    },
+    imgCarousel: {
+        height: 110,
+        cursor: 'pointer',
+
+        background: '#EEE',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+
+        '&:hover': {
+            border: '3px solid #245a46'
+        }
     }
 }));
 
-export default function FullWidthTabs() {
+export default function ImageDetails() {
     const classes = useStyles();
-    const theme = useTheme();
-    const [value, setValue] = React.useState(0);
+    const chevronWidth = 40;
+    const [activeItemIndex, setActiveItemIndex] = useState(0);
+    const [picture, setPicture] = useState([])
+    const [img, setImg] = useState('')
 
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+    const getPicture = async () => {
+        try {
+            const result = await firestore.collection('products')
+                .where('id', '==', localStorage.id)
+                .get()
+            if (result.size > 0) {
+                result.forEach(doc => {
+                    setPicture(doc.data().picture)
+                    setImg(doc.data().picture[0])
+                })
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
-    const handleChangeIndex = (index) => {
-        setValue(index);
-    };
+    useEffect(() => {
+        getPicture()
+    }, [localStorage.id])
 
     return (
         <div className={classes.root}>
-            <AppBar position="static" color="default">
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    variant="fullWidth"
-                    aria-label="full width tabs example"
-                    className={classes.tabs}
-                >
-                    <Tab className={classes.tab} label="Item One" {...a11yProps(0)} />
-                    <Tab className={classes.tab} label="Item Two" {...a11yProps(1)} />
-                    <Tab className={classes.tab} label="Item Three" {...a11yProps(2)} />
-                </Tabs>
-            </AppBar>
-            <SwipeableViews
-                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                index={value}
-                onChangeIndex={handleChangeIndex}
+            {
+                img !== ''
+                    ?
+                    <ReactImageMagnify {...{
+                        smallImage: {
+                            alt: 'giò chả',
+                            isFluidWidth: false,
+                            src: img,
+                            width: 500,
+                            height: 450
+                        },
+                        largeImage: {
+                            src: img,
+                            width: 1000,
+                            height: 1100
+                        },
+                        hoverDelayInMs: 0,
+                        style: {zIndex: 999, marginBottom: 5}
+                    }} />
+                    : null
+            }
+            <ItemsCarousel
+                requestToChangeActive={setActiveItemIndex}
+                activeItemIndex={activeItemIndex}
+                numberOfCards={4}
+                gutter={20}
+                leftChevron={<button>{'<'}</button>}
+                rightChevron={<button>{'>'}</button>}
+                outsideChevron
+                chevronWidth={chevronWidth}
+                className={classes.carousel}
             >
-                <TabPanel value={value} index={0} dir={theme.direction}>
-                    Item One
-                </TabPanel>
-                <TabPanel value={value} index={1} dir={theme.direction}>
-                    Item Two
-                </TabPanel>
-                <TabPanel value={value} index={2} dir={theme.direction}>
-                    Item Three
-                </TabPanel>
-            </SwipeableViews>
+                {picture.map(value1 =>
+                    <div
+                        onClick={() => setImg(value1)}
+                        className={classes.imgCarousel}
+                        style={{
+                            backgroundImage: `url(${value1})`,
+                        }}></div>
+                )}
+            </ItemsCarousel>
         </div>
     );
 }

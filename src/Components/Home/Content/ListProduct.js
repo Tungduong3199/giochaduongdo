@@ -57,6 +57,7 @@ const List = [anh1, anh1, anh1, anh1]
 function ListProduct(props) {
     const classes = useStyles();
     const [arr, setArr] = useState(List)
+
     return (
         <div className={classes.container}>
             <div className={classes.topic}>
@@ -72,25 +73,7 @@ function ListProduct(props) {
                     <Grid item sm={12} className={classes.listProduct}>
                         {arr.map(value => <ProductDetails img={value}/>)}
                     </Grid>
-                    <Grid item container sm={12}>
-                        <IntroduceProduct/>
-                    </Grid>
-                </Grid>
-            </Grid>
-            <div className={classes.topic}>
-                <span>Giò</span>
-                <div className={classes.before}></div>
-            </div>
-            <Grid container sm={12} className={classes.box}>
-                <Grid item sm={4} className={classes.qc}>
-                    <img className={classes.imgQc}
-                         src={'http://demo.posthemes.com/pos_greenfarm/layout4/modules/poslistcateproduct/images/728560923e4c0f26b2635b2add8e0b9cdf562c50_listcate1.jpg'}/>
-                </Grid>
-                <Grid item sm={8}>
-                    <Grid item sm={12} className={classes.listProduct}>
-                        {arr.map(value => <ProductDetails img={value}/>)}
-                    </Grid>
-                    <Grid item container sm={12}>
+                    <Grid item container sm={12} style={{marginTop: 10}}>
                         <IntroduceProduct/>
                     </Grid>
                 </Grid>
