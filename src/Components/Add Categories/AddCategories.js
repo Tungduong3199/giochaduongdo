@@ -11,7 +11,9 @@ import {useHistory} from 'react-router-dom'
 import {firestore} from '../../firebaseConfig'
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
-import Topic from "../Home/Banner/Topic";
+import Chip from "@material-ui/core/Chip";
+import TopicCate from "./TopicCate";
+import Footer from "../Home/Footer/Footer";
 import Footer from "../Home/Footer/Footer";
 
 const useStyles = makeStyles((theme) => ({
@@ -97,6 +99,10 @@ function AddCategories(props) {
         setCheck(true)
     }
 
+    function handleDelete() {
+
+    }
+
     const getCategories = async () => {
         try {
             let data = []
@@ -104,7 +110,6 @@ function AddCategories(props) {
                 .get()
                 .then((querySnapshot) =>
                     querySnapshot.forEach((doc) => {
-                        console.log(doc.data())
                         data.push(doc.data())
                     }))
             setArr([...data])
@@ -125,6 +130,11 @@ function AddCategories(props) {
                     <Container component="main" maxWidth="xs">
                         <CssBaseline/>
                         <div className={classes.paper}>
+                            <div>
+                                {arr.map(value => (
+                                    <Chip label={value.name} onDelete={handleDelete}/>
+                                ))}
+                            </div>
                             <Typography component="h1" variant="h5" style={{marginBottom: 20}}>
                                 Thêm Danh Mục
                             </Typography>
@@ -181,7 +191,7 @@ function AddCategories(props) {
                     <Typography variant={'h5'} align={'center'} gutterBottom>Danh Mục Hiện Tại</Typography>
                     <div style={{width: '100%', height: '100%', borderRadius: 10, backgroundColor: '#fff'}}>
                         <div style={{width: 300, margin: '0 auto', marginTop: 20, paddingTop: 30}}>
-                            <Topic arr={arr}/>
+                            <TopicCate arr={arr}/>
                         </div>
                     </div>
                 </Grid>

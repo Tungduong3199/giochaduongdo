@@ -1,11 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {ArrowRight, PlayCircleOutline} from "@material-ui/icons";
-import TopicDetails from "./TopicDetails";
-import {firestore} from '../../../firebaseConfig'
-import {PropagateLoader} from "react-spinners";
-import Typography from "@material-ui/core/Typography";
-import {useHistory} from 'react-router-dom'
+import {Delete, Edit, PlayCircleOutline} from "@material-ui/icons";
+import {firestore} from '../../firebaseConfig'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -105,18 +101,16 @@ const load = {
 }
 
 
-export default function Topic({arr}) {
+export default function TopicCate({arr}) {
     const classes = useStyles();
-    const history = useHistory()
     const [cate, setCate] = useState('')
     const [product, setProduct] = useState([])
     const [loading, setLoading] = useState(false)
 
-    const handleClick = (value) => {
-        localStorage.clear()
-        localStorage.cate = value.key
-        localStorage.id = value.id
-        history.push(`/product/${localStorage.cate}/${value.name}`)
+    function handleClick(e) {
+        firestore.collection('categories')
+            .where('key', '==', e)
+            .delete()
     }
 
     const getDataTopic = async () => {
@@ -124,7 +118,7 @@ export default function Topic({arr}) {
         try {
             let data = []
             const result = await firestore.collection('products')
-                .where('cate', '==', cate)
+                .where('key', '==', cate)
                 .get()
             if (result) {
                 result.forEach(doc => {
@@ -145,7 +139,7 @@ export default function Topic({arr}) {
     useEffect(() => {
         getDataTopic()
     }, [cate])
-    console.log(cate);
+
     return (
         <div style={{margin: '0 15px 0 -12px'}}>
             <div className={classes.topic}>
@@ -154,28 +148,11 @@ export default function Topic({arr}) {
             </div>
             <ul className={classes.ul}>
                 {arr.map(value => (
-                    <li onMouseOver={() => setCate(value.name)} className={classes.li}>{value.name}<ArrowRight
-                        className={classes.iconArrow}/>
-                        <ul className={classes.ulCon}
-                            style={{
-                                paddingBottom: 15,
-                                height: 620,
-                                flexWrap: 'wrap',
-                                width: 850,
-                                backgroundColor: '#245a46'
-                            }}>
-                            {loading
-                                ? <PropagateLoader css={load} type={"bars"} color={'#ffffff'}/>
-                                : product.length === 0
-                                    ? <Typography variant={"h5"} gutterBottom className={classes.text}>Không có sản phẩm
-                                        nào !</Typography>
-                                    : product.map(value1 =>
-                                        <li className={classes.liCon} onClick={() => handleClick(value1)}
-                                            style={{margin: '17px 15px 0 -7px'}}><TopicDetails
-                                            name={value1.name} price={value1.price} img={value1.productAvt}/></li>
-                                    )
-                            }
-                        </ul>
+                    <li className={classes.li}>{value.name}
+                        <Edit className={classes.iconArrow}/>
+                        <Delete className={classes.iconArrow} onClick={() => {
+                            handleClick(value.key)
+                        }}/>
                     </li>
                 ))}
             </ul>

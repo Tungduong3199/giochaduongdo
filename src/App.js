@@ -10,6 +10,7 @@ import {useDocument} from "react-firebase-hooks/firestore";
 import Profile from "./Components/Login/Profile";
 import AddProduct from "./Components/Add Product/AddProduct";
 import AddCategories from './Components/Add Categories/AddCategories'
+import ProductDetails from "./Components/Product Details/ProductDetails";
 
 async function _loadAssetsAsync() {
     return Promise.all([
@@ -67,6 +68,7 @@ function App() {
             <Route path={'/profile'} component={Profile}/>
             <Route path={'/add-product'} component={AddProduct}/>
             <Route path={'/add-categories'} component={AddCategories}/>
+            <Route path={`/product`} component={ProductDetails}/>
         </Switch>
     );
 }
