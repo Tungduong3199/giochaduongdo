@@ -12,12 +12,14 @@ import {firestore} from '../../firebaseConfig'
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
 import Topic from "../Home/Banner/Topic";
+import Footer from "../Home/Footer/Footer";
 
 const useStyles = makeStyles((theme) => ({
     container: {
         marginTop: 50,
         width: 1170,
-        margin: '0 auto'
+        margin: '0 auto',
+        paddingBottom: 70
     },
     paper: {
         marginTop: theme.spacing(8),
@@ -26,9 +28,11 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     footer: {
-        position: 'absolute',
-        bottom: 0,
-        width: '100%'
+        [theme.breakpoints.up('xl')]:{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+        }
     },
     formControl: {
         margin: theme.spacing(1),
@@ -189,9 +193,9 @@ function AddCategories(props) {
                 </Snackbar>
 
             </Grid>
-            {/*<div className={classes.footer}>*/}
-            {/*    <Footer/>*/}
-            {/*</div>*/}
+            <div className={classes.footer}>
+                <Footer/>
+            </div>
         </div>
     );
 }
