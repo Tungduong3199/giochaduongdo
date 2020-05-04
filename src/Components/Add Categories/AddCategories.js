@@ -14,7 +14,6 @@ import Alert from "@material-ui/lab/Alert";
 import Chip from "@material-ui/core/Chip";
 import TopicCate from "./TopicCate";
 import Footer from "../Home/Footer/Footer";
-import Footer from "../Home/Footer/Footer";
 
 const useStyles = makeStyles((theme) => ({
     container: {
