@@ -145,7 +145,7 @@ export default function Topic({arr}) {
     useEffect(() => {
         getDataTopic()
     }, [cate])
-    console.log(cate);
+
     return (
         <div style={{margin: '0 15px 0 -12px'}}>
             <div className={classes.topic}>
