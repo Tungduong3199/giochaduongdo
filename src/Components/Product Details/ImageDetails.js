@@ -4,8 +4,9 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import {firestore} from '../../firebaseConfig'
-import ItemsCarousel from 'react-items-carousel';
 import ReactImageMagnify from "react-image-magnify";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -49,21 +50,48 @@ const useStyles = makeStyles((theme) => ({
     imgCarousel: {
         height: 110,
         cursor: 'pointer',
+        width: 160,
+        margin: 'auto',
 
         background: '#EEE',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
 
         '&:hover': {
-            border: '3px solid #245a46'
+            border: '2px solid #245a46'
         }
     }
 }));
 
+const responsive = {
+    desktop: {
+        breakpoint: {
+            max: 3000,
+            min: 1024
+        },
+        items: 3,
+        partialVisibilityGutter: 40
+    },
+    mobile: {
+        breakpoint: {
+            max: 464,
+            min: 0
+        },
+        items: 1,
+        partialVisibilityGutter: 30
+    },
+    tablet: {
+        breakpoint: {
+            max: 1024,
+            min: 464
+        },
+        items: 2,
+        partialVisibilityGutter: 30
+    }
+}
+
 export default function ImageDetails() {
     const classes = useStyles();
-    const chevronWidth = 40;
-    const [activeItemIndex, setActiveItemIndex] = useState(0);
     const [picture, setPicture] = useState([])
     const [img, setImg] = useState('')
 
@@ -110,16 +138,27 @@ export default function ImageDetails() {
                     }} />
                     : null
             }
-            <ItemsCarousel
-                requestToChangeActive={setActiveItemIndex}
-                activeItemIndex={activeItemIndex}
-                numberOfCards={4}
-                gutter={20}
-                leftChevron={<button>{'<'}</button>}
-                rightChevron={<button>{'>'}</button>}
-                outsideChevron
-                chevronWidth={chevronWidth}
-                className={classes.carousel}
+            <Carousel
+                additionalTransfrom={0}
+                arrows
+                autoPlaySpeed={3000}
+                centerMode={false}
+                className=""
+                containerClass="container-with-dots"
+                dotListClass=""
+                draggable
+                focusOnSelect={false}
+                infinite
+                itemClass=""
+                keyBoardControl
+                minimumTouchDrag={80}
+                renderButtonGroupOutside={false}
+                renderDotsOutside={false}
+                responsive={responsive}
+                showDots={false}
+                sliderClass=""
+                slidesToSlide={1}
+                swipeable
             >
                 {picture.map(value1 =>
                     <div
@@ -129,7 +168,7 @@ export default function ImageDetails() {
                             backgroundImage: `url(${value1})`,
                         }}></div>
                 )}
-            </ItemsCarousel>
+            </Carousel>
         </div>
     );
 }

@@ -11,6 +11,7 @@ import Profile from "./Components/Login/Profile";
 import AddProduct from "./Components/Add Product/AddProduct";
 import AddCategories from './Components/Add Categories/AddCategories'
 import ProductDetails from "./Components/Product Details/ProductDetails";
+import Introduce from "./Components/Introduce/Introduce";
 
 async function _loadAssetsAsync() {
     return Promise.all([
@@ -66,6 +67,7 @@ function App() {
             <Route exact path={'/'} component={Home}/>
             <Route path={'/login'} component={Login}/>
             <Route path={'/profile'} component={Profile}/>
+            <Route path={'/gioi_thieu'} component={Introduce}/>
             <Route path={'/add-product'} component={AddProduct}/>
             <Route path={'/add-categories'} component={AddCategories}/>
             <Route path={`/product`} component={ProductDetails}/>

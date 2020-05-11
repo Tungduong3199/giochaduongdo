@@ -9,9 +9,7 @@ import {useHistory} from 'react-router-dom'
 
 const useStyles = makeStyles({
     root: {
-        maxWidth: 300,
-        width: 200,
-        margin: 5
+        margin: 5,
     },
     media: {
         height: 200,

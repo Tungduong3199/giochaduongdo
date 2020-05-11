@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Grid from "@material-ui/core/Grid";
 import ProductDetails from "./ProductDetails";
 import IntroduceProduct from "./IntroduceProduct";
 import {makeStyles} from "@material-ui/core/styles";
-import anh1 from "../../../Images/gio-lua.png";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 const useStyles = makeStyles({
     topic: {
         backgroundColor: '#245a46',
-        width: '10%',
+        width: '12%',
         height: 50,
         display: 'flex',
         justifyContent: 'center',
@@ -28,7 +29,9 @@ const useStyles = makeStyles({
         left: 0
     },
     box: {
-        marginLeft: 15
+        marginLeft: 15,
+        boxShadow: '5px 7px 14px -7px #888888',
+        backgroundColor: '#fff'
     },
     qc: {
         overflow: 'hidden',
@@ -41,17 +44,58 @@ const useStyles = makeStyles({
             transform: 'scale(1.1,1.1)'
         }
     },
-    listProduct: {
-        display: 'flex',
-        flexDirection: 'row',
+    divProduct: {
+        width: 400,
+        height: 100
+    },
+    imgCarousel: {
+        height: 110,
+        cursor: 'pointer',
+        width: 160,
+        margin: 'auto',
+
+        background: '#EEE',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+
+        '&:hover': {
+            border: '2px solid #245a46'
+        }
     }
 })
 
-function ListProductDetails({data, cate}) {
+const responsive = {
+    desktop: {
+        breakpoint: {
+            max: 3000,
+            min: 1024
+        },
+        items: 4,
+        partialVisibilityGutter: 40
+    },
+    mobile: {
+        breakpoint: {
+            max: 464,
+            min: 0
+        },
+        items: 1,
+        partialVisibilityGutter: 30
+    },
+    tablet: {
+        breakpoint: {
+            max: 1024,
+            min: 464
+        },
+        items: 2,
+        partialVisibilityGutter: 30
+    }
+}
+
+function ListProductDetails({data, cate, img, img1, img2}) {
     const classes = useStyles();
 
     return (
-        <div style={{marginBottom: 20}}>
+        <div style={{marginBottom: 40}}>
             <div className={classes.topic}>
                 <span>{cate}</span>
                 <div className={classes.before}></div>
@@ -59,15 +103,35 @@ function ListProductDetails({data, cate}) {
             <Grid container sm={12} className={classes.box}>
                 <Grid item sm={4} className={classes.qc}>
                     <img className={classes.imgQc}
-                         src={'http://demo.posthemes.com/pos_greenfarm/layout4/modules/poslistcateproduct/images/728560923e4c0f26b2635b2add8e0b9cdf562c50_listcate1.jpg'}/>
+                         src={img
+                             ? img
+                             : 'http://demo.posthemes.com/pos_greenfarm/layout4/modules/poslistcateproduct/images/728560923e4c0f26b2635b2add8e0b9cdf562c50_listcate1.jpg'}/>
                 </Grid>
-                <Grid item sm={8}>
-                    <Grid item sm={12} className={classes.listProduct}>
-                        {data.map(value => <ProductDetails id={value.id} cate={cate} price={value.price}
-                                                           name={value.name} img={value.productAvt}/>)}
+                <Grid item container sm={8}>
+                    <Grid item sm={12}>
+                        <Carousel
+                            additionalTransfrom={0}
+                            arrows={data.length > 4 ? true : false}
+                            autoPlaySpeed={3000}
+                            containerClass="container-with-dots"
+                            draggable
+                            infinite
+                            keyBoardControl
+                            minimumTouchDrag={80}
+                            renderButtonGroupOutside={false}
+                            renderDotsOutside={false}
+                            responsive={responsive}
+                            slidesToSlide={1}
+                            swipeable
+                        >
+                            {data.map(value =>
+                                <ProductDetails id={value.id} cate={value.cate} price={value.price}
+                                                name={value.name} img={value.productAvt}/>
+                            )}
+                        </Carousel>
                     </Grid>
                     <Grid item container sm={12} style={{marginTop: 10}}>
-                        <IntroduceProduct/>
+                        <IntroduceProduct img1={img1} img2={img2}/>
                     </Grid>
                 </Grid>
             </Grid>

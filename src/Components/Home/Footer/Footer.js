@@ -16,7 +16,7 @@ import {
 const useStyles = makeStyles({
     container: {
         margin: '0 auto',
-        marginTop: 30,
+        marginTop: -40,
     },
     box: {
         textAlign: 'center',

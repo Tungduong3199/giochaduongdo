@@ -199,7 +199,7 @@ function AddProduct(props) {
     const addProductAvatar = (event) => {
         setLoadingAvt(true)
         let file = event.target.files[0]
-        const uploadTask = storage.ref().child('images/' + file.name).put(file);
+        const uploadTask = storage.ref().child('images/' + file.name + uuidv4()).put(file);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
             function (snapshot) {
                 const progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100) + 1;
