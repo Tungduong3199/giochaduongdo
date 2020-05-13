@@ -11,7 +11,6 @@ import {useHistory} from 'react-router-dom'
 import {firestore} from '../../firebaseConfig'
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
-import Chip from "@material-ui/core/Chip";
 import TopicCate from "./TopicCate";
 import Footer from "../Home/Footer/Footer";
 
@@ -129,11 +128,6 @@ function AddCategories(props) {
                     <Container component="main" maxWidth="xs">
                         <CssBaseline/>
                         <div className={classes.paper}>
-                            <div>
-                                {arr.map(value => (
-                                    <Chip label={value.name} onDelete={handleDelete}/>
-                                ))}
-                            </div>
                             <Typography component="h1" variant="h5" style={{marginBottom: 20}}>
                                 Thêm Danh Mục
                             </Typography>

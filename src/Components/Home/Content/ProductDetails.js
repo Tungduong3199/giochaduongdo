@@ -5,7 +5,6 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import {useHistory} from 'react-router-dom'
 import _ from 'lodash'
 
 const useStyles = makeStyles({
@@ -18,19 +17,11 @@ const useStyles = makeStyles({
     },
 });
 
-export default function ProductDetails({img, name, price, cate, id}) {
+export default function ProductDetails({img, name, price}) {
     const classes = useStyles();
-    const history = useHistory();
-
-    const handleClick = () => {
-        localStorage.clear()
-        localStorage.cate = cate
-        localStorage.id = id
-        history.push(`/product/${localStorage.cate}/${name}`)
-    }
 
     return (
-        <Card className={classes.root} onClick={handleClick}>
+        <Card className={classes.root}>
             <CardActionArea>
                 <CardMedia
                     className={classes.media}

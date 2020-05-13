@@ -357,7 +357,7 @@ function AddProduct(props) {
                     </div>
                 </Container>
             </div>
-            <div>
+            <div style={{marginTop: 50}}>
                 <Footer/>
             </div>
             <Snackbar open={open} autoHideDuration={3000} onClose={() => setOpen(false)}>

@@ -5,6 +5,7 @@ import IntroduceProduct from "./IntroduceProduct";
 import {makeStyles} from "@material-ui/core/styles";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import {useHistory} from 'react-router-dom'
 
 const useStyles = makeStyles({
     topic: {
@@ -96,6 +97,14 @@ const responsive = {
 
 function ListProductDetails({data, cate, img, img1, img2}) {
     const classes = useStyles();
+    const history = useHistory();
+
+    const handleClick = (name, id) => {
+        localStorage.clear()
+        localStorage.cate = cate
+        localStorage.id = id
+        history.push(`/product/${localStorage.cate}/${name}`)
+    }
 
     return (
         <div style={{marginBottom: 40}}>
@@ -128,8 +137,10 @@ function ListProductDetails({data, cate, img, img1, img2}) {
                             swipeable
                         >
                             {data.map(value =>
-                                <ProductDetails id={value.id} cate={value.cate} price={value.price}
-                                                name={value.name} img={value.productAvt}/>
+                                <div onClick={() => handleClick(value.name, value.id)}>
+                                    <ProductDetails id={value.id} cate={value.cate} price={value.price}
+                                                    name={value.name} img={value.productAvt}/>
+                                </div>
                             )}
                         </Carousel>
                     </Grid>

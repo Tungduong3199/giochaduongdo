@@ -32,7 +32,7 @@ export default function MediaCard({name, price, img}) {
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2" style={{textTransform: 'capitalize'}}>
                         {_.truncate(name, {
-                            'length': 15,
+                            'length': 14,
                         })}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">

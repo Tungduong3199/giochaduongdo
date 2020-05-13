@@ -67,7 +67,7 @@ export default function ButtonAppBar() {
                         trang chủ
                     </Typography>
                     <Typography onClick={() => {
-                        history.push('/gioi_thieu')
+                        history.push('/gioi-thieu')
                     }} variant="h6" className={classes.title}>
                         giới thiệu
                     </Typography>
