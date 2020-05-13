@@ -5,6 +5,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import _ from "lodash";
 
 const useStyles = makeStyles({
     root: {
@@ -29,8 +30,10 @@ export default function MediaCard({name, price, img}) {
                     image={img}
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {name}
+                    <Typography gutterBottom variant="h5" component="h2" style={{textTransform: 'capitalize'}}>
+                        {_.truncate(name, {
+                            'length': 15,
+                        })}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
                         {price}

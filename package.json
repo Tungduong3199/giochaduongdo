@@ -13,6 +13,7 @@
     "bootstrap": "^4.4.1",
     "firebase": "^7.13.1",
     "firebaseui": "^4.5.0",
+    "lodash": "^4.17.15",
     "notistack": "^0.9.10",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",

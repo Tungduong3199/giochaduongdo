@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import {useHistory} from 'react-router-dom'
+import _ from 'lodash'
 
 const useStyles = makeStyles({
     root: {
@@ -27,6 +28,7 @@ export default function ProductDetails({img, name, price, cate, id}) {
         localStorage.id = id
         history.push(`/product/${localStorage.cate}/${name}`)
     }
+
     return (
         <Card className={classes.root} onClick={handleClick}>
             <CardActionArea>
@@ -36,8 +38,10 @@ export default function ProductDetails({img, name, price, cate, id}) {
                     title={name}
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        {name}
+                    <Typography gutterBottom variant="h5" component="h2" style={{textTransform: 'capitalize'}}>
+                        {_.truncate(name, {
+                            'length': 11,
+                        })}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
                         {price}

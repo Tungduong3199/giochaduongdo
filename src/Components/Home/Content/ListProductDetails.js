@@ -31,10 +31,13 @@ const useStyles = makeStyles({
     box: {
         marginLeft: 15,
         boxShadow: '5px 7px 14px -7px #888888',
-        backgroundColor: '#fff'
+        backgroundColor: '#245a46',
+        width: 1179,
+        height: 600
     },
     qc: {
         overflow: 'hidden',
+        height: 600
     },
     imgQc: {
         height: '100%',
@@ -44,9 +47,9 @@ const useStyles = makeStyles({
             transform: 'scale(1.1,1.1)'
         }
     },
-    divProduct: {
-        width: 400,
-        height: 100
+    product: {
+        height: 615,
+        backgroundColor: '#245a46'
     },
     imgCarousel: {
         height: 110,
@@ -107,7 +110,7 @@ function ListProductDetails({data, cate, img, img1, img2}) {
                              ? img
                              : 'http://demo.posthemes.com/pos_greenfarm/layout4/modules/poslistcateproduct/images/728560923e4c0f26b2635b2add8e0b9cdf562c50_listcate1.jpg'}/>
                 </Grid>
-                <Grid item container sm={8}>
+                <Grid item container sm={8} className={classes.product}>
                     <Grid item sm={12}>
                         <Carousel
                             additionalTransfrom={0}
@@ -130,7 +133,7 @@ function ListProductDetails({data, cate, img, img1, img2}) {
                             )}
                         </Carousel>
                     </Grid>
-                    <Grid item container sm={12} style={{marginTop: 10}}>
+                    <Grid item container sm={12}>
                         <IntroduceProduct img1={img1} img2={img2}/>
                     </Grid>
                 </Grid>
