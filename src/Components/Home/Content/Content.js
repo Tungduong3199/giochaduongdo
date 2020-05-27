@@ -2,6 +2,7 @@ import React from 'react';
 import IntroduceProduct from "./IntroduceProduct";
 import {makeStyles} from "@material-ui/core/styles";
 import ListProduct from "./ListProduct";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles({
     container: {
@@ -13,10 +14,10 @@ const useStyles = makeStyles({
 function Content(props) {
     const classes = useStyles();
     return (
-        <div className={classes.container}>
+        <Grid container xs={11} className={classes.container}>
             <IntroduceProduct/>
             <ListProduct/>
-        </div>
+        </Grid>
     );
 }
 

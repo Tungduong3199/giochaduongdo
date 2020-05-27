@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,14 +6,23 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import CurrencyFormat from "react-currency-format";
+import NumberFormat from 'react-number-format';
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Files from "react-butterfiles";
 import Container from "@material-ui/core/Container";
 import {makeStyles} from "@material-ui/core/styles";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import {firestore, storage} from '../../firebaseConfig'
+import Alert from "@material-ui/lab/Alert";
+import Snackbar from "@material-ui/core/Snackbar";
+import {v4 as uuidv4} from "uuid";
+import * as firebase from "firebase";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     price: {
         width: '100%',
         height: 56,
@@ -57,17 +66,156 @@ const useStyles = makeStyles({
         border: '1px solid rgb(192, 192, 192)',
         paddingLeft: 40,
         backgroundColor: '#d2d2d2',
+    },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+    },
+    iconLoad: {
+        color: '#245a46',
+        margin: 'auto',
+        marginTop: 40
     }
-})
+}))
 
-export default function AlertDialog({open, setOpen, data, picture}) {
-    const classes = useStyles()
-    const [loading, setLoading] = useState(false)
-    const [loadingAvt, setLoadingAvt] = useState(false)
+export default function AlertDialog({open, setOpen, data, cate, reload, setReload, priceProduct}) {
+
+    const classes = useStyles();
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState(priceProduct);
+    const [descrided, setDescrided] = useState('');
+    const [codeProduct, setCodeProduct] = useState('');
+    const [categories, setCategories] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [loadingAvt, setLoadingAvt] = useState(false);
+    const [productAvt, setProductAvt] = useState('');
+    const [picture, setPicture] = useState([]);
+    const [openSnackBar, setOpenSnackBar] = useState(false)
+
     const handleClose = () => {
         setOpen(false);
     };
-    console.log(picture);
+
+    const handleChangeNameProduct = (e) => {
+        setName(e.target.value)
+    };
+
+    const handleChangeDescrided = (e) => {
+        setDescrided(e.target.value)
+    };
+
+    const handleChangeCategories = e => {
+        setCategories(e.target.value)
+    };
+
+    const handleChangeCodeProduct = e => {
+        setCodeProduct(e.target.value)
+    };
+
+    const handleChangeProduct = async () => {
+        try {
+            await firestore.collection('products')
+                .doc(data.doc)
+                .set({
+                    cate: categories,
+                    name: name,
+                    codeProduct: codeProduct,
+                    price: price,
+                    descrided: descrided,
+                    picture: picture,
+                    productAvt: productAvt,
+                }, {merge: true})
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setOpen(false)
+            setOpenSnackBar(true)
+            setReload(!reload)
+        }
+    }
+
+    const onDrop = (e) => {
+        setLoading(true)
+        let data = []
+        e.forEach(doc => {
+                const uploadTask = storage.ref().child('images/' + doc.src.file.name + uuidv4()).put(doc.src.file);
+                uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+                    function (snapshot) {
+                        console.log(snapshot)
+                        switch (snapshot.state) {
+                            case firebase.storage.TaskState.PAUSED:
+                                break;
+                            case firebase.storage.TaskState.RUNNING:
+                                break;
+                        }
+                    }, function (error) {
+                        switch (error.code) {
+                            case 'storage/unauthorized':
+                                break;
+
+                            case 'storage/canceled':
+                                break;
+
+                            case 'storage/unknown':
+                                break;
+                        }
+                    }, function () {
+                        uploadTask.snapshot.ref.getDownloadURL().then(function (photoURL) {
+                            data.push(photoURL)
+                            setPicture([...data])
+                            setLoading(false)
+                        });
+                    })
+            }
+        )
+    }
+
+    const addProductAvatar = (event) => {
+        setLoadingAvt(true)
+        let file = event.target.files[0]
+        const uploadTask = storage.ref().child('images/' + file.name + uuidv4()).put(file);
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+            function (snapshot) {
+                const progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100) + 1;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case firebase.storage.TaskState.PAUSED:
+                        console.log('Upload is paused');
+                        break;
+                    case firebase.storage.TaskState.RUNNING:
+                        console.log('Upload is running');
+                        break;
+                }
+            }, function (error) {
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                        break;
+
+                    case 'storage/canceled':
+                        break;
+
+                    case 'storage/unknown':
+                        break;
+                }
+            }, function () {
+                uploadTask.snapshot.ref.getDownloadURL().then(function (photoURL) {
+                    console.log('File available at', photoURL);
+                    setProductAvt(photoURL)
+                    setLoadingAvt(false)
+                });
+            });
+    }
+
+    useEffect(() => {
+        setCategories(data.cate)
+        setCodeProduct(data.codeProduct)
+        setName(data.name)
+        setPicture(data.picture)
+        setProductAvt(data.productAvt)
+        setDescrided(data.descrided)
+        setPrice(data.price)
+    }, [data])
+
     return (
         <Dialog
             open={open}
@@ -79,74 +227,82 @@ export default function AlertDialog({open, setOpen, data, picture}) {
                 <CssBaseline/>
                 <div className={classes.paper}>
                     <Typography align={'center'} component="h1" variant="h5">
-                        Thêm Sản Phẩm
+                        Chỉnh Sửa Sản Phẩm
                     </Typography>
                     <form className={classes.form} noValidate>
                         <Grid container spacing={2}>
-                            {/*<Grid item xs={12}>*/}
-                            {/*    <FormControl className={classes.formControl}>*/}
-                            {/*        <InputLabel id="demo-simple-select-label">Danh mục</InputLabel>*/}
-                            {/*        <Select*/}
-                            {/*            labelId="demo-simple-select-label"*/}
-                            {/*            id="demo-simple-select"*/}
-                            {/*            // onChange={handleChangeCategories}*/}
-                            {/*        >*/}
-                            {/*            {*/}
-                            {/*                arrCate.map(value =>*/}
-                            {/*                    <MenuItem value={value.name}>{value.name}</MenuItem>*/}
-                            {/*                )*/}
-                            {/*            }*/}
-                            {/*        </Select>*/}
-                            {/*    </FormControl>*/}
-                            {/*</Grid>*/}
+                            <Grid item xs={12}>
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel id="demo-simple-select-label">Danh mục</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        defaultValue={data.cate}
+                                        onChange={handleChangeCategories}
+                                    >
+                                        {
+                                            cate.map(value =>
+                                                <MenuItem value={value.name}>{value.name}</MenuItem>
+                                            )
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    // error={check === true && name === '' ? true : false}
                                     variant="outlined"
                                     required
                                     fullWidth
-                                    value={data.name}
-                                    label="Tên sản phẩm"
+                                    defaultValue={data.codeProduct}
+                                    label="Mã sản phẩm"
                                     autoComplete="name product"
-                                    // onChange={handleChangeNameProduct}
+                                    onChange={handleChangeCodeProduct}
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <CurrencyFormat placeholder={"Giá sản phẩm"}
-                                                value={data.price}
-                                                className={classes.price}
-                                    // onChange={handleChangePrice}
-                                                thousandSeparator={true} suffix={' đ'}/>
+                                <TextField
+                                    variant="outlined"
+                                    fullWidth
+                                    defaultValue={data.name}
+                                    label="Tên sản phẩm"
+                                    autoComplete="name product"
+                                    onChange={handleChangeNameProduct}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <NumberFormat placeholder={'Giá sản phẩm'} className={classes.price} value={price}
+                                              displayType={'input'} onChange={(e) => setPrice(e.target.value)}
+                                              thousandSeparator={true} suffix={' đ'}/>
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
-                                    id="outlined-multiline-static"
                                     variant="outlined"
                                     fullWidth
+                                    defaultValue={data.descrided}
                                     label="Mô tả"
-                                    // onChange={handleChangeDescrided}
-                                    value={data.descrided}
+                                    autoComplete={'descrided'}
+                                    onChange={handleChangeDescrided}
                                 />
                             </Grid>
                             <Grid item xs={12} style={{marginTop: 10}}>
                                 <input style={{display: 'none'}} id="img" type="file"
-                                    // onChange={addProductAvatar}
+                                       onChange={addProductAvatar}
                                 />
                                 <label htmlFor="img" className={classes.inputImg}>
-                                    <CloudUploadIcon className={classes.iconUpload}/> Thêm ảnh đại diện sản phẩm
+                                    <CloudUploadIcon className={classes.iconUpload}/> Sửa ảnh đại diện sản phẩm
                                 </label>
                             </Grid>
                             <Grid item xs={12}>
                                 {loadingAvt
                                     ? <CircularProgress style={{color: '#245a46'}}/>
-                                    : data.productAvt && <img src={data.productAvt} width={100} height={100}/>
+                                    : !productAvt ? null : <img src={productAvt} width={100} height={100}/>
                                 }
                             </Grid>
                             <Grid item xs={12}>
                                 <Files
                                     multiple={true}
                                     accept={["application/pdf", "image/jpg", "image/jpeg", "image/png"]}
-                                    // onSuccess={onDrop}
+                                    onSuccess={onDrop}
                                     // onError={errors => this.setState({ errors })}
                                 >
                                     {({browseFiles}) => (
@@ -154,27 +310,36 @@ export default function AlertDialog({open, setOpen, data, picture}) {
                                             <Button className={classes.addDetails} onClick={(e) => {
                                                 e.preventDefault()
                                                 browseFiles()
-                                            }}><CloudUploadIcon className={classes.iconUpload}/>Thêm ảnh Chi tiết
+                                            }}><CloudUploadIcon className={classes.iconUpload}/>Sửa ảnh Chi tiết
                                             </Button>
                                         </>
                                     )}
                                 </Files>
                             </Grid>
-                            {/*<div>*/}
-                            {/*    {picture.length === 0*/}
-                            {/*        ? null*/}
-                            {/*        : picture.map(file =>  <img className={classes.imgDetails} src={file}/>)*/}
-                            {/*    }*/}
-                            {/*</div>*/}
+                            <Grid item container xs={12}>
+                                {picture === undefined
+                                    ? null
+                                    : loading ? <CircularProgress className={classes.iconLoad}/>
+                                        : picture.map(file =>
+                                            <Grid item xs={6}>
+                                                <img className={classes.imgDetails} src={file}/>
+                                            </Grid>)
+                                }
+                            </Grid>
                         </Grid>
                     </form>
                 </div>
             </Container>
             <DialogActions>
-                <Button onClick={handleClose} color="primary" autoFocus>
+                <Button onClick={handleChangeProduct} color="primary">
                     Sửa sản phẩm
                 </Button>
             </DialogActions>
+            <Snackbar open={openSnackBar} autoHideDuration={3000} onClose={() => setOpenSnackBar(false)}>
+                <Alert onClose={() => setOpenSnackBar(false)} variant="filled" severity="success">
+                    Sửa sản phẩm thành công !
+                </Alert>
+            </Snackbar>
         </Dialog>
     );
 }

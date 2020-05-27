@@ -14,6 +14,8 @@ import Container from "@material-ui/core/Container";
 import {firestore} from "../../firebaseConfig";
 import ProductDetails from "../Home/Content/ProductDetails";
 import AlertDialog from "./AlertDialog";
+import {HighlightOffTwoTone} from "@material-ui/icons";
+import {PropagateLoader} from "react-spinners";
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -23,17 +25,41 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(1),
         minWidth: 120,
+    },
+    boxProduct: {
+        position: 'relative'
+    },
+    icon: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        width: 40,
+        height: 40,
+        cursor: 'pointer',
+        color: '#245a46'
+    },
+    text: {
+        color: '#245a46',
+        textAlign: 'center',
+        margin: 'auto'
     }
 }))
 
+const load = {
+    display: 'block',
+    margin: 'auto'
+}
+
 function FixProduct(props) {
     const classes = useStyles();
-    const [cate, setCate] = useState('')
-    const [open, setOpen] = useState(false)
-    const [arrCate, setArrCate] = useState([])
-    const [codeProduct, setCodeProduct] = useState('')
-    const [product, setProduct] = useState([])
-    const [fix, setFix] = useState('')
+    const [cate, setCate] = useState('');
+    const [open, setOpen] = useState(false);
+    const [arrCate, setArrCate] = useState([]);
+    const [codeProduct, setCodeProduct] = useState('');
+    const [product, setProduct] = useState([]);
+    const [data, setData] = useState('');
+    const [reload, setReload] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     function handleChangeCategories(e) {
         setCate(e.target.value)
@@ -41,20 +67,14 @@ function FixProduct(props) {
 
     const handleChangeProductCode = (e) => {
         setCodeProduct(e.target.value)
-    }
-
-    const handleClick = (value) => {
-        setOpen(true)
-        setFix(value)
-    }
-
+    };
 
     const getCate = async () => {
         try {
             let data = []
             const result = await firestore
                 .collection('categories')
-                .get()
+                .get();
             if (result) {
                 result.forEach(doc =>
                     data.push(doc.data())
@@ -64,38 +84,47 @@ function FixProduct(props) {
         } catch (e) {
             console.log(e);
         }
-    }
+    };
 
     const getProduct = async () => {
         try {
-            let data = []
+            setLoading(true);
+            let data = [];
             const result = await firestore.collection('products')
                 .where('cate', '==', cate)
-                .get()
+                .get();
             if (result) {
                 result.forEach(doc => {
-                    data.push(doc.data())
-                    console.log(data);
+                    data.push({...doc.data(), doc: doc.id})
                 })
             }
-            setProduct([...data])
-
+            setProduct([...data]);
+            setLoading(false)
         } catch (e) {
             console.log(e);
         }
-    }
+    };
 
-    const fixProduct = () => {
-
-    }
+    const handleDelete = (value) => {
+        try {
+            firestore.collection('products')
+                .doc(value.doc)
+                .delete()
+                .then(() => {
+                    setReload(!reload)
+                })
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     useEffect(() => {
         getCate()
-    }, [])
+    }, []);
 
     useEffect(() => {
         getProduct()
-    }, [cate])
+    }, [cate, reload]);
 
     return (
         <div>
@@ -106,7 +135,7 @@ function FixProduct(props) {
                         <CssBaseline/>
                         <div className={classes.paper}>
                             <Typography align={'center'} component="h1" variant="h5">
-                                Chỉnh sửa Sản Phẩm
+                                Chọn Sản Phẩm
                             </Typography>
                             <form className={classes.form} noValidate>
                                 <Grid container spacing={2}>
@@ -143,18 +172,35 @@ function FixProduct(props) {
                     </Container>
                 </Grid>
                 <Grid item container sm={8}>
-                    {product.map(value => <Grid item sm={3} onClick={() => handleClick(value)}><ProductDetails
-                        id={value.id} cate={value.cate}
-                        price={value.price}
-                        name={value.name}
-                        img={value.productAvt}/></Grid>
-                    )}
+                    {cate === ''
+                        ? <Typography variant={"h5"} gutterBottom className={classes.text}>
+                            Hãy chọn danh mục !
+                        </Typography>
+                        : product.length === 0
+                            ? loading === true ? <PropagateLoader css={load} type={"bars"} color={'#245a46'}/>
+                                : <Typography variant={"h5"} gutterBottom className={classes.text}>
+                                    Không có sản phẩm nào !
+                                </Typography>
+                            : loading === true ? <PropagateLoader css={load} type={"bars"} color={'#245a46'}/>
+                                : product.map(value =>
+                                    <Grid item sm={3} className={classes.boxProduct}>
+                                        <ProductDetails
+                                            data={value}
+                                            alert={true}
+                                            setData={setData}
+                                            setOpen={setOpen}
+                                        />
+                                        <HighlightOffTwoTone onClick={() => handleDelete(value)}
+                                                             className={classes.icon}/>
+                                    </Grid>
+                                )}
                 </Grid>
             </Grid>
             <div style={product.length < 5 ? {position: 'absolute', bottom: 0, width: '100%'} : null}>
                 <Footer/>
             </div>
-            <AlertDialog open={open} setOpen={setOpen} data={fix} picture={fix.picture}/>
+            <AlertDialog priceProduct={data.price} open={open} setOpen={setOpen} data={data} cate={arrCate}
+                         reload={reload} setReload={setReload}/>
         </div>
     );
 }

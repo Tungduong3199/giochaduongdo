@@ -89,6 +89,7 @@ function AddProduct(props) {
     const [cate, setCate] = useState('')
     const [name, setName] = useState('')
     const [price, setPrice] = useState('')
+    const [codeProduct, setCodeProduct] = useState('')
     const [descrided, setDescrided] = useState('')
     const [check, setCheck] = useState(false)
     const [open, setOpen] = useState(false)
@@ -111,6 +112,10 @@ function AddProduct(props) {
 
     function handleChangeDescrided(e) {
         setDescrided(e.target.value)
+    }
+
+    function handleChangeCodeProduct(e) {
+        setCodeProduct(e.target.value)
     }
 
     const getCate = async () => {
@@ -140,6 +145,7 @@ function AddProduct(props) {
                     .add({
                         cate: cate,
                         name: name,
+                        codeProduct: codeProduct.toUpperCase(),
                         price: price,
                         descrided: descrided,
                         picture: picture,
@@ -156,6 +162,7 @@ function AddProduct(props) {
                 setDescrided('')
                 setPicture([])
                 setProductAvt('')
+                setCodeProduct('')
             }
         }
     }
@@ -164,7 +171,7 @@ function AddProduct(props) {
         setLoading(true)
         let data = []
         e.forEach(doc => {
-                const uploadTask = storage.ref().child('images/' + doc.src.file.name).put(doc.src.file);
+            const uploadTask = storage.ref().child('images/' + doc.src.file.name + uuidv4()).put(doc.src.file);
                 uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
                     function (snapshot) {
                         console.log(snapshot)
@@ -275,6 +282,18 @@ function AddProduct(props) {
                                         label="Tên sản phẩm"
                                         autoComplete="name product"
                                         onChange={handleChangeNameProduct}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        error={check === true && name === '' ? true : false}
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        value={codeProduct}
+                                        label="Mã sản phẩm"
+                                        autoComplete="name product"
+                                        onChange={handleChangeCodeProduct}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>

@@ -6,6 +6,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import {useHistory} from 'react-router-dom'
+import {AddShoppingCart, Search} from "@material-ui/icons";
 
 const useStyles = makeStyles({
     topic: {
@@ -65,6 +66,30 @@ const useStyles = makeStyles({
         '&:hover': {
             border: '2px solid #245a46'
         }
+    },
+    icon: {
+        width: 30,
+        height: 30,
+        color: '#fff',
+        backgroundColor: '#245a46',
+        borderRadius: 30,
+        padding: 8,
+    },
+    containerIcon: {
+        position: 'absolute',
+        zIndex: 10,
+        transform: 'translateY(80px) translateX(43px)',
+        opacity: 0,
+        visibility: 'hidden',
+        transition: 'all 0.3s ease-in-out',
+        height: 46,
+        cursor: 'pointer'
+    },
+    product1: {
+        '&:hover > div': {
+            visibility: 'visible',
+            opacity: 1
+        }
     }
 })
 
@@ -106,6 +131,14 @@ function ListProductDetails({data, cate, img, img1, img2}) {
         history.push(`/product/${localStorage.cate}/${name}`)
     }
 
+    const handleSearch = () => {
+
+    }
+
+    const handleCart = () => {
+
+    }
+
     return (
         <div style={{marginBottom: 40}}>
             <div className={classes.topic}>
@@ -120,7 +153,7 @@ function ListProductDetails({data, cate, img, img1, img2}) {
                              : 'http://demo.posthemes.com/pos_greenfarm/layout4/modules/poslistcateproduct/images/728560923e4c0f26b2635b2add8e0b9cdf562c50_listcate1.jpg'}/>
                 </Grid>
                 <Grid item container sm={8} className={classes.product}>
-                    <Grid item sm={12}>
+                    <Grid item sm={12} style={data.length === 0 ? {height: 300} : null}>
                         <Carousel
                             additionalTransfrom={0}
                             arrows={data.length > 4 ? true : false}
@@ -137,9 +170,16 @@ function ListProductDetails({data, cate, img, img1, img2}) {
                             swipeable
                         >
                             {data.map(value =>
-                                <div onClick={() => handleClick(value.name, value.id)}>
-                                    <ProductDetails id={value.id} cate={value.cate} price={value.price}
-                                                    name={value.name} img={value.productAvt}/>
+                                <div className={classes.product1}>
+                                    <div className={classes.containerIcon}>
+                                        <Search onClick={handleSearch} className={classes.icon}
+                                                style={{marginRight: 5}}/>
+                                        <AddShoppingCart onClick={handleCart} className={classes.icon}
+                                                         style={{marginLeft: 5}}/>
+                                    </div>
+                                    <div onClick={() => handleClick(value.name, value.id)}>
+                                        <ProductDetails data={value}/>
+                                    </div>
                                 </div>
                             )}
                         </Carousel>

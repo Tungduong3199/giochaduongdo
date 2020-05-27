@@ -10,32 +10,61 @@ import _ from 'lodash'
 const useStyles = makeStyles({
     root: {
         margin: 5,
+        '&:hover > div': {
+            visibility: 'visible',
+            opacity: 1
+        }
     },
     media: {
         height: 200,
         width: 200
     },
+    icon: {
+        width: 30,
+        height: 30,
+        color: '#fff',
+        backgroundColor: '#245a46',
+        borderRadius: 30,
+        padding: 8,
+    },
+    containerIcon: {
+        position: 'absolute',
+        zIndex: 10,
+        transform: 'translateY(80px) translateX(43px)',
+        opacity: 0,
+        visibility: 'hidden',
+        transition: 'all 0.3s ease-in-out',
+        height: 46,
+        cursor: 'pointer'
+    }
 });
 
-export default function ProductDetails({img, name, price}) {
+export default function ProductDetails({data, alert, setOpen, setData}) {
+
     const classes = useStyles();
+
+    const handleClick = () => {
+        setData(data)
+        setOpen(true)
+    }
 
     return (
         <Card className={classes.root}>
-            <CardActionArea>
+
+            <CardActionArea onClick={alert === true ? handleClick : null}>
                 <CardMedia
                     className={classes.media}
-                    image={img}
-                    title={name}
+                    image={data.productAvt}
+                    title={data.name}
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2" style={{textTransform: 'capitalize'}}>
-                        {_.truncate(name, {
+                        {_.truncate(data.name, {
                             'length': 11,
                         })}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                        {price}
+                        {data.price}
                     </Typography>
                 </CardContent>
             </CardActionArea>

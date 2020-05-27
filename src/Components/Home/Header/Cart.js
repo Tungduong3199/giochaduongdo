@@ -7,23 +7,26 @@ const useStyles = makeStyles({
     cart: {
         width: 50,
         height: 50,
-        marginLeft: 5,
-        float: 'right'
+        marginLeft: -35,
     },
     text: {
         color: 'gray',
         fontSize: 17,
         fontFamily: 'sans-serif',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginLeft: -45
     },
     arrow: {
         color: 'gray',
-        float: 'left'
+        float: 'left',
+        marginLeft: -10
     },
     container: {
         display: 'flex',
         justifyContent: 'flex-end',
         alignItems: 'center',
+        marginLeft: 120,
+        cursor: 'pointer'
     }
 })
 

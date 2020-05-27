@@ -102,8 +102,10 @@ export default function ImageDetails() {
                 .get()
             if (result.size > 0) {
                 result.forEach(doc => {
-                    setPicture(doc.data().picture)
-                    setImg(doc.data().picture[0])
+                    const a = doc.data().picture
+                    a.unshift(doc.data().productAvt)
+                    setPicture(a)
+                    setImg(doc.data().productAvt)
                 })
             }
         } catch (e) {

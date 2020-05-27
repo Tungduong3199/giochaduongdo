@@ -8,7 +8,7 @@ import anh4 from '../../../Images/unnamed.jpg'
 import {DoneOutline, DriveEta, PhoneInTalk} from "@material-ui/icons";
 import {firestore} from '../../../firebaseConfig'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     container: {
         maxWidth: 1170,
         margin: '0 auto',
@@ -28,7 +28,14 @@ const useStyles = makeStyles({
     },
     cheDo: {
         marginTop: 20,
-        border: '1px solid #e5e5e5'
+        border: '1px solid #e5e5e5',
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: 'center',
+            margin: 'auto',
+            marginTop: 30,
+            boxShadow: '0px 1px 5px 0px rgba(0, 0, 0, 0.1)',
+            border: '1px solid #dcdcdc'
+        }
     },
     box: {
         textAlign: 'center',
@@ -39,15 +46,33 @@ const useStyles = makeStyles({
         backgroundColor: '#fff',
         color: '#777777',
         textTransform: 'uppercase',
-        fontWeight: 500
+        fontWeight: 500,
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+            display: 'grid'
+        }
     },
     icon: {
         color: '#245a46',
         width: 35,
         height: 35,
-        marginRight: 10
+        marginRight: 10,
+        [theme.breakpoints.down('sm')]: {
+            margin: 'auto'
+        }
+    },
+    cate: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }
+    },
+    imgIntro: {
+        height: 400,
+        [theme.breakpoints.down('sm')]: {
+            marginTop: 30
+        }
     }
-})
+}))
 
 function Banner(props) {
     const classes = useStyles();
@@ -74,22 +99,22 @@ function Banner(props) {
     }, [])
     return (
         <Grid container sm={12} className={classes.container}>
-            <Grid item xs={3}>
+            <Grid item className={classes.cate} sm={3}>
                 <Topic arr={categories}/>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item container xs={11} sm={6} style={{margin: 'auto'}}>
                 <Slider/>
             </Grid>
-            <Grid item container xs={3} style={{height: 400}}>
-                <Grid item sm={12} style={{overflow: 'hidden', height: 190}}>
+            <Grid item container sm={3} className={classes.imgIntro}>
+                <Grid item xs={12} sm={12} style={{overflow: 'hidden', height: 190}}>
                     <img className={classes.img} src={anh3} alt={'gio cha'}/>
                 </Grid>
-                <Grid item sm={12} style={{overflow: 'hidden'}}>
+                <Grid item xs={12} sm={12} style={{overflow: 'hidden'}}>
                     <img className={classes.img} style={{}} src={anh4}
                          alt={'gio cha'}/>
                 </Grid>
             </Grid>
-            <Grid item container sm={12} className={classes.cheDo}>
+            <Grid item container xs={11} sm={12} className={classes.cheDo}>
                 <Grid item sm={4} className={classes.box}>
                     <DriveEta className={classes.icon}/> <span>Giao Hàng Toàn Miền Bắc</span>
                 </Grid>
