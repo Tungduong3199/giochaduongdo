@@ -7,17 +7,23 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import _ from 'lodash'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     root: {
-        margin: 5,
+        margin: 10,
         '&:hover > div': {
             visibility: 'visible',
             opacity: 1
+        },
+        [theme.breakpoints.down('sm')]: {
+            width: '62%',
+            margin: '10px auto 0 auto',
+            paddingLeft: 8,
+
         }
     },
     media: {
         height: 200,
-        width: 200
+        width: 200,
     },
     icon: {
         width: 30,
@@ -37,7 +43,7 @@ const useStyles = makeStyles({
         height: 46,
         cursor: 'pointer'
     }
-});
+}));
 
 export default function ProductDetails({data, alert, setOpen, setData}) {
 

@@ -6,7 +6,7 @@ import anh2 from '../../../Images/Gio/cccc.jpg'
 
 const useStyles = makeStyles(theme => ({
     container: {
-        margin: '0 auto',
+        margin: '0 auto'
     },
     box: {
         height: 300,
@@ -24,6 +24,11 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             transform: 'scale(1.2,1.2)',
         }
+    },
+    hideMobile: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }
     }
 }))
 
@@ -37,7 +42,7 @@ function IntroduceProduct({img1, img2}) {
                     <img className={classes.img} src={img1 ? img1 : anh2}/>
                 </div>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item className={classes.hideMobile} xs={12} sm={6}>
                 <div className={classes.box}>
                     <img className={classes.img} src={img2 ? img2 : anh1}/>
                 </div>

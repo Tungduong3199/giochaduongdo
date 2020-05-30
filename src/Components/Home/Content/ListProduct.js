@@ -20,13 +20,16 @@ import dongLanh0 from '../../../Images/Do Dong Lanh/nemchuaran_master.jpg'
 import dongLanh1 from '../../../Images/Do Dong Lanh/sdfhgjkhmgnf.jpg'
 import dongLanh2 from '../../../Images/Do Dong Lanh/upload_a2b7c3b4d45246ccb730aa17b0656aa9_master.jpg'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     container: {
         marginTop: 20,
         marginLeft: -15,
         marginRight: 5,
+        [theme.breakpoints.down('sm')]: {
+            width: '100%'
+        }
     }
-})
+}))
 
 function ListProduct(props) {
     const classes = useStyles();

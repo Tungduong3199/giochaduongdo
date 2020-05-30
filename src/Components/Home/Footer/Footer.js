@@ -13,13 +13,15 @@ import {
     YouTube
 } from "@material-ui/icons";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     container: {
-        margin: '0 auto',
-        marginTop: -40,
+        margin: '0 auto'
     },
     box: {
         textAlign: 'center',
+        [theme.breakpoints.down('sm')]: {
+            margin: 'auto'
+        }
     },
     logo: {
         textAlign: 'center',
@@ -44,9 +46,16 @@ const useStyles = makeStyles({
         fontSize: 35,
         fontFamily: 'segoe-ui',
         marginBottom: 10,
-        textAlign: 'center'
+        textAlign: 'center',
+        marginTop: 10
+    },
+    lienHe: {
+        margin: '5px 0',
+        [theme.breakpoints.down('sm')]: {
+            flexWrap: 'initial'
+        }
     }
-})
+}))
 
 
 function Footer(props) {
@@ -101,7 +110,7 @@ function Footer(props) {
                         </Typography>
                     </Grid>
                     {lienHe.map(value =>
-                        <Grid item container sm={12} style={{margin: '5px 0'}}>
+                        <Grid item container sm={12} className={classes.lienHe}>
                             <Grid item sm={2} style={{textAlign: 'center'}}>
                                 {value.icon}
                             </Grid>
@@ -119,7 +128,8 @@ function Footer(props) {
                         "Ch%25E1%25BA%25A3-D%25C6%25B0%25C6%25A1ng-%25C4%2590%25E1%25BB%2597-103531264652067%2F%3Fmodal%3Dadmin_" +
                         "todo_tour&tabs=timeline&width=400&height=250&small_header=false&adapt_container_width=true&hide_" +
                         "cover=false&show_facepile=true&appId=2255782128058223"}
-                        width={400} height={300} style={{border: 'none', overflow: 'hidden'}} scrolling={"no"}
+                        width={400} height={300} style={{border: 'none', overflow: 'hidden', marginTop: 20}}
+                        scrolling={"no"}
                         frameBorder={0}
                         allowTransparency={true} allow={'encrypted-media'}></iframe>
                 </Grid>

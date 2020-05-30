@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
         left: 0
     },
     ul: {
-        width: '80%',
+        width: '94%',
         boxShadow: '20px 25px 10px -20px rgba(0, 0, 0, 0.1)',
         float: 'right',
         marginRight: 30,
@@ -70,18 +70,20 @@ const useStyles = makeStyles((theme) => ({
         }
     },
     ulCon: {
-        display: 'flex',
-        flexDirection: 'row',
-        position: 'absolute',
+        top: 0,
         left: '100%',
         width: '100%',
-        top: 0,
+        paddingLeft: 18,
+        backgroundColor: '#fff',
+
+        display: 'flex',
+        flexDirection: 'row',
+
+        position: 'absolute',
         visibility: 'hidden',
         opacity: 0,
-        transition: 'all 0.1s ease-in-out',
         zIndex: 999,
-        backgroundColor: '#fff',
-        margin: '0 auto'
+        transition: 'all 0.1s ease-in-out',
     },
     liCon: {
         listStyle: 'none',
@@ -159,7 +161,7 @@ export default function Topic({arr}) {
                         <ul className={classes.ulCon}
                             style={{
                                 paddingBottom: 15,
-                                height: 620,
+                                height: 635,
                                 flexWrap: 'wrap',
                                 width: 850,
                                 backgroundColor: '#245a46'

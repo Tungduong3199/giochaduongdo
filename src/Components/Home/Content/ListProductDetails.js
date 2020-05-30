@@ -8,7 +8,13 @@ import "react-multi-carousel/lib/styles.css";
 import {useHistory} from 'react-router-dom'
 import {AddShoppingCart, Search} from "@material-ui/icons";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
+    container: {
+        marginTop: 10,
+        [theme.breakpoints.down('sm')]: {
+            marginBottom: 520
+        }
+    },
     topic: {
         backgroundColor: '#245a46',
         width: '12%',
@@ -20,6 +26,9 @@ const useStyles = makeStyles({
         textTransform: 'uppercase',
         fontWeight: 'bold',
         position: 'relative',
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: '100%',
+        }
     },
     before: {
         position: 'absolute',
@@ -35,11 +44,17 @@ const useStyles = makeStyles({
         boxShadow: '5px 7px 14px -7px #888888',
         backgroundColor: '#245a46',
         width: 1179,
-        height: 600
+        height: 600,
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+        }
     },
     qc: {
         overflow: 'hidden',
-        height: 600
+        height: 600,
+        [theme.breakpoints.down('sm')]: {
+            height: 470
+        }
     },
     imgQc: {
         height: '100%',
@@ -47,6 +62,9 @@ const useStyles = makeStyles({
         transition: 'all 1s ease-in-out',
         '&:hover': {
             transform: 'scale(1.1,1.1)'
+        },
+        [theme.breakpoints.down('sm')]: {
+            height: 470
         }
     },
     product: {
@@ -91,7 +109,7 @@ const useStyles = makeStyles({
             opacity: 1
         }
     }
-})
+}))
 
 const responsive = {
     desktop: {
@@ -140,23 +158,23 @@ function ListProductDetails({data, cate, img, img1, img2}) {
     }
 
     return (
-        <div style={{marginBottom: 40}}>
-            <div className={classes.topic}>
+        <Grid container xs={12} sm={12} className={classes.container}>
+            <Grid item xs={5} sm={2} className={classes.topic}>
                 <span>{cate}</span>
                 <div className={classes.before}></div>
-            </div>
-            <Grid container sm={12} className={classes.box}>
-                <Grid item sm={4} className={classes.qc}>
+            </Grid>
+            <Grid item container xs={12} sm={12} className={classes.box}>
+                <Grid item xs={12} sm={4} className={classes.qc}>
                     <img className={classes.imgQc}
                          src={img
                              ? img
                              : 'http://demo.posthemes.com/pos_greenfarm/layout4/modules/poslistcateproduct/images/728560923e4c0f26b2635b2add8e0b9cdf562c50_listcate1.jpg'}/>
                 </Grid>
-                <Grid item container sm={8} className={classes.product}>
-                    <Grid item sm={12} style={data.length === 0 ? {height: 300} : null}>
+                <Grid item container xs={12} sm={8} className={classes.product}>
+                    <Grid item xs={11} sm={12} style={data.length === 0 ? {height: 300} : {margin: 'auto'}}>
                         <Carousel
                             additionalTransfrom={0}
-                            arrows={data.length > 4 ? true : false}
+                            arrows={data.length > 4 || window.screen.width < 500 ? true : false}
                             autoPlaySpeed={3000}
                             containerClass="container-with-dots"
                             draggable
@@ -184,12 +202,12 @@ function ListProductDetails({data, cate, img, img1, img2}) {
                             )}
                         </Carousel>
                     </Grid>
-                    <Grid item container sm={12}>
+                    <Grid item container xs={12} sm={12}>
                         <IntroduceProduct img1={img1} img2={img2}/>
                     </Grid>
                 </Grid>
             </Grid>
-        </div>
+        </Grid>
     );
 }
 

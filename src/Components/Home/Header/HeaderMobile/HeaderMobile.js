@@ -1,11 +1,11 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
 import Grid from "@material-ui/core/Grid";
 import logo from '../../../../Images/logo.png'
 import {LocalMallOutlined} from "@material-ui/icons";
 import Badge from "@material-ui/core/Badge";
 import Search from '../Search'
+import IconAppBar from "./IconAppBar";
 
 const useStyles = makeStyles((theme) => ({
     img: {
@@ -25,10 +25,10 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    iconCart:{
+    iconCart: {
         marginRight: 30
     },
-    icon:{
+    icon: {
         width: 50,
         height: 50,
     }
@@ -39,8 +39,8 @@ export default function ButtonAppBar() {
 
     return (
         <Grid container xs={12} style={{marginTop: 10}}>
-            <Grid item xs={2} className={classes.boxMenu}>
-                <MenuIcon className={classes.menuIcon}/>
+            <Grid item xs={2} className={classes.boxMenu} style={{paddingLeft: 175, marginRight: -110}}>
+                <IconAppBar/>
             </Grid>
             <Grid item xs={8}>
                 <img alt={'giò chả'} src={logo} className={classes.img}/>
@@ -50,7 +50,7 @@ export default function ButtonAppBar() {
                     <LocalMallOutlined className={classes.icon}/>
                 </Badge>
             </Grid>
-            <Grid item xs={11} style={{margin:'15px auto',}}>
+            <Grid item xs={11} style={{margin: '15px auto',}}>
                 <Search/>
             </Grid>
         </Grid>
