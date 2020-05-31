@@ -6,6 +6,7 @@ import {LocalMallOutlined} from "@material-ui/icons";
 import Badge from "@material-ui/core/Badge";
 import Search from '../Search'
 import IconAppBar from "./IconAppBar";
+import {useHistory} from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     img: {
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ButtonAppBar() {
     const classes = useStyles();
+    const history = useHistory();
 
     return (
         <Grid container xs={12} style={{marginTop: 10}}>
@@ -43,7 +45,7 @@ export default function ButtonAppBar() {
                 <IconAppBar/>
             </Grid>
             <Grid item xs={8}>
-                <img alt={'giò chả'} src={logo} className={classes.img}/>
+                <img alt={'giò chả'} src={logo} className={classes.img} onClick={() => history.push('/')}/>
             </Grid>
             <Grid item xs={2} className={classes.boxMenu}>
                 <Badge badgeContent={4} color={"primary"} className={classes.iconCart}>

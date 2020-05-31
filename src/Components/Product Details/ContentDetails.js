@@ -2,17 +2,26 @@ import React, {useState} from 'react';
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     root: {
         width: 670,
         height: 575,
         marginLeft: 13,
         backgroundColor: '#fff',
+        [theme.breakpoints.down('sm')]: {
+            marginLeft: 0,
+            paddingLeft: 15
+        }
     },
     container: {
         paddingTop: 30,
-        marginLeft: 35
+        marginLeft: 35,
+        [theme.breakpoints.down('sm')]: {
+            paddingTop: 0,
+
+        }
     },
     nameProduct: {
         textTransform: 'capitalize',
@@ -44,7 +53,7 @@ const useStyles = makeStyles({
         color: '#fff',
         marginTop: 20,
     }
-})
+}))
 
 function ContentDetails({product}) {
     const classes = useStyles();
@@ -55,17 +64,17 @@ function ContentDetails({product}) {
     }
 
     return (
-        <div className={classes.root}>
-            <div className={classes.container}>
-                <Typography variant={'h4'} className={classes.nameProduct}>{product.name}</Typography>
-                <Typography variant={"h6"} className={classes.price}>{product.price}</Typography>
-                <Typography variant={"body1"} className={classes.descrided}>{product.descrided}</Typography>
-                <Typography variant={"body1"} style={{marginTop: 20, color: '#666666'}}>Số lượng:</Typography>
-                <input type="number" min="0" onChange={handleChangeQuantity} value={quantity}
-                       className={classes.quantity}/><br/>
-                <Button type={'contained'} className={classes.button}>Thêm vào giỏ hàng</Button>
-            </div>
-        </div>
+        <Grid item xs={12} sm={12} className={classes.root}>
+            {/*<div className={classes.container}>*/}
+            <Typography variant={'h4'} className={classes.nameProduct}>{product.name}</Typography>
+            <Typography variant={"h6"} className={classes.price}>{product.price}</Typography>
+            <Typography variant={"body1"} className={classes.descrided}>{product.descrided}</Typography>
+            <Typography variant={"body1"} style={{marginTop: 20, color: '#666666'}}>Số lượng:</Typography>
+            <input type="number" min="0" onChange={handleChangeQuantity} value={quantity}
+                   className={classes.quantity}/><br/>
+            <Button type={'contained'} className={classes.button}>Thêm vào giỏ hàng</Button>
+            {/*</div>*/}
+        </Grid>
     );
 }
 

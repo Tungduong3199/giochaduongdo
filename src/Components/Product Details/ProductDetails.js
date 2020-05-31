@@ -11,11 +11,15 @@ import {firestore} from '../../firebaseConfig'
 import ContentDetails from "./ContentDetails";
 import {useHistory} from 'react-router-dom'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     container: {
         width: 1170,
         margin: 'auto',
-        marginTop: 30
+        marginTop: 30,
+        [theme.breakpoints.down('sm')]: {
+            marginBottom: 20,
+            boxShadow: '0px 5px 4px 0px rgba(0, 0, 0, 0.1)'
+        }
     },
     box: {
         backgroundColor: '#f5f5f5',
@@ -24,12 +28,15 @@ const useStyles = makeStyles({
     path: {
         width: 1170,
         margin: 'auto',
-        padding: '20px 0'
+        padding: '20px 0',
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }
     },
     link: {
         cursor: 'pointer'
     }
-})
+}))
 
 function ProductDetails(props) {
     const classes = useStyles();
@@ -87,16 +94,16 @@ function ProductDetails(props) {
                 </Link>
                 <Typography style={{color: '#245a46'}}>{product.name}</Typography>
             </Breadcrumbs>
-            <section className={classes.box}>
-                <Grid container sm={12} className={classes.container}>
-                    <Grid item sm={5}>
-                        <ImageDetails/>
-                    </Grid>
-                    <Grid item sm={7}>
-                        <ContentDetails product={product}/>
-                    </Grid>
+
+            <Grid container xs={11} sm={12} className={classes.container}>
+                <Grid item xs={12} sm={5}>
+                    <ImageDetails/>
                 </Grid>
-            </section>
+                <Grid item container xs={12} sm={7}>
+                    <ContentDetails product={product}/>
+                </Grid>
+            </Grid>
+
             <Footer/>
         </div>
     );

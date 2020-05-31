@@ -10,6 +10,10 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import {useHistory} from 'react-router-dom'
+import {ExpandLess, ExpandMore} from "@material-ui/icons";
+import Collapse from "@material-ui/core/Collapse";
+import List from "@material-ui/core/List";
 
 const drawerWidth = 200;
 
@@ -39,13 +43,18 @@ const useStyles = makeStyles((theme) => ({
         // necessary for content to be below app bar
         ...theme.mixins.toolbar,
         justifyContent: 'flex-end',
-    }
+    },
+    nested: {
+        paddingLeft: theme.spacing(4),
+    },
 }));
 
 export default function PersistentDrawerLeft() {
     const classes = useStyles();
     const theme = useTheme();
+    const history = useHistory();
     const [open, setOpen] = React.useState(false);
+    const [openCollapse, setOpenCollapse] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -54,6 +63,10 @@ export default function PersistentDrawerLeft() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    const handleClickOpenCollapse = () => {
+        setOpenCollapse(!openCollapse)
+    }
 
     return (
         <div className={classes.root}>
@@ -85,19 +98,39 @@ export default function PersistentDrawerLeft() {
                 </div>
                 <Divider style={{backgroundColor: '#fff'}}/>
                 <ListItem button>
-                    <ListItemText primary={'Trang chủ'}/>
+                    <ListItemText primary={'Trang chủ'} onClick={() => history.push('/')}/>
                 </ListItem>
                 <ListItem button>
-                    <ListItemText primary={'Giới thiệu'}/>
+                    <ListItemText primary={'Giới thiệu'} onClick={() => history.push('/gioi-thieu')}/>
+                </ListItem>
+                <ListItem button onClick={handleClickOpenCollapse}>
+                    <ListItemText primary="Sản phẩm"/>
+                    {openCollapse ? <ExpandLess/> : <ExpandMore/>}
+                </ListItem>
+                <Collapse in={openCollapse} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.nested}>
+                            <ListItemText primary="Giò"/>
+                        </ListItem>
+                        <ListItem button className={classes.nested}>
+                            <ListItemText primary="Chả"/>
+                        </ListItem>
+                        <ListItem button className={classes.nested}>
+                            <ListItemText primary="Bánh Chưng"/>
+                        </ListItem>
+                        <ListItem button className={classes.nested}>
+                            <ListItemText primary="Đồ Khô"/>
+                        </ListItem>
+                        <ListItem button className={classes.nested}>
+                            <ListItemText primary="Đồ Đông Lạnh"/>
+                        </ListItem>
+                    </List>
+                </Collapse>
+                <ListItem button>
+                    <ListItemText primary={'Khuyến mãi'} onClick={() => history.push('/')}/>
                 </ListItem>
                 <ListItem button>
-                    <ListItemText primary={'Sản phẩm'}/>
-                </ListItem>
-                <ListItem button>
-                    <ListItemText primary={'Khuyến mãi'}/>
-                </ListItem>
-                <ListItem button>
-                    <ListItemText primary={'Liên hệ'}/>
+                    <ListItemText primary={'Liên hệ'} onClick={() => history.push('')}/>
                 </ListItem>
             </Drawer>
         </div>

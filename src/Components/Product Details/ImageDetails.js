@@ -35,7 +35,10 @@ const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: theme.palette.background.paper,
         width: 500,
-        height: 575
+        height: 575,
+        [theme.breakpoints.down('sm')]: {
+            width: '100%'
+        }
     },
     tabs: {
         height: 70,
@@ -77,7 +80,7 @@ const responsive = {
             max: 464,
             min: 0
         },
-        items: 1,
+        items: 2,
         partialVisibilityGutter: 30
     },
     tablet: {
@@ -127,8 +130,8 @@ export default function ImageDetails() {
                             alt: 'giò chả',
                             isFluidWidth: false,
                             src: img,
-                            width: 500,
-                            height: 450
+                            width: window.screen.width < 500 ? window.screen.width - 34 : 450,
+                            height: 400
                         },
                         largeImage: {
                             src: img,

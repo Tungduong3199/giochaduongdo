@@ -11,13 +11,16 @@ import gio from '../../Images/Gio/unnamed.jpg'
 import cha from '../../Images/Cha/recipe41560-cook-step3-636759745418208412.jpg'
 import banhChung from '../../Images/Banh Chung/banh-chung-la-mon-an-truyen-thong-cua-Tet-Viet.jpg'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     breadcrumb: {
         width: 1170,
         margin: 'auto',
-        marginTop: 20
+        marginTop: 20,
+        [theme.breakpoints.down('sm')]: {
+            display: 'none'
+        }
     }
-})
+}))
 
 const text_1 = 'Thời phong kiến xa xưa, món ăn này rất cao quý, bữa cỗ có món giò chả thì coi như sang lắm.' +
     ' Đến thời bao cấp, giò chả càng trở nên xa xỉ, bị quy vào hàng cấm. Vì miếng cơm manh áo, người Hoàng Trung ' +
@@ -60,7 +63,8 @@ function Introduce(props) {
                 <Typography color="textPrimary">Giới Thiệu</Typography>
             </Breadcrumbs>
             <DetailsIntroduce text1={text_1} text2={text_2} img={gio} sort={true}/>
-            <DetailsIntroduce text1={text_3} text2={text_4} img={cha} sort={false}/>
+            <DetailsIntroduce text1={text_3} text2={text_4} img={cha}
+                              sort={false || window.screen.width < 500 && true}/>
             <DetailsIntroduce text1={text_5} text2={text_6} img={banhChung} sort={true}/>
             <hr/>
             <div style={{marginTop: 60}}>
