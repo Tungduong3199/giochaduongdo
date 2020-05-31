@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {useHistory} from 'react-router-dom'
+import HoverProduct from "./HoverProduct";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -73,6 +74,7 @@ export default function ButtonAppBar() {
                     </Typography>
                     <Typography variant="h6" className={classes.product}>
                         sản phẩm
+                        <HoverProduct/>
                     </Typography>
                     <Typography variant="h6" className={classes.title}>
                         khuyến mãi

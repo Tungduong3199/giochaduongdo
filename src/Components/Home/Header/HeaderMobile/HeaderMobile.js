@@ -41,7 +41,7 @@ export default function ButtonAppBar() {
 
     return (
         <Grid container xs={12} style={{marginTop: 10}}>
-            <Grid item xs={2} className={classes.boxMenu} style={{paddingLeft: 175, marginRight: -110}}>
+            <Grid item xs={2} className={classes.boxMenu} style={{margin: 'auto'}}>
                 <IconAppBar/>
             </Grid>
             <Grid item xs={8}>

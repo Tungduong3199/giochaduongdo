@@ -129,8 +129,8 @@ function FixProduct(props) {
     return (
         <div>
             <Header/>
-            <Grid container className={classes.content}>
-                <Grid item sm={4}>
+            <Grid container xs={12} className={classes.content}>
+                <Grid item xs={12} sm={4}>
                     <Container component="main" maxWidth="xs">
                         <CssBaseline/>
                         <div className={classes.paper}>
@@ -171,7 +171,7 @@ function FixProduct(props) {
                         </div>
                     </Container>
                 </Grid>
-                <Grid item container sm={8}>
+                <Grid item container xs={12} sm={8}>
                     {cate === ''
                         ? <Typography variant={"h5"} gutterBottom className={classes.text}>
                             Hãy chọn danh mục !
@@ -183,7 +183,7 @@ function FixProduct(props) {
                                 </Typography>
                             : loading === true ? <PropagateLoader css={load} type={"bars"} color={'#245a46'}/>
                                 : product.map(value =>
-                                    <Grid item sm={3} className={classes.boxProduct}>
+                                    <Grid item xs={12} sm={3} className={classes.boxProduct}>
                                         <ProductDetails
                                             data={value}
                                             alert={true}
@@ -196,7 +196,12 @@ function FixProduct(props) {
                                 )}
                 </Grid>
             </Grid>
-            <div style={product.length < 5 ? {position: 'absolute', bottom: 0, width: '100%'} : null}>
+            <div style={product.length < 5
+                ?
+                window.screen.width < 500
+                    ? {position: 'inherit'}
+                    : {position: 'absolute', bottom: 0, width: '100%'}
+                : null}>
                 <Footer/>
             </div>
             <AlertDialog priceProduct={data.price} open={open} setOpen={setOpen} data={data} cate={arrCate}

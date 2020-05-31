@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import clsx from 'clsx';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -14,12 +14,16 @@ import {useHistory} from 'react-router-dom'
 import {ExpandLess, ExpandMore} from "@material-ui/icons";
 import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List";
+import {auth, firestore} from "../../../../firebaseConfig";
 
 const drawerWidth = 200;
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        [theme.breakpoints.down('sm')]: {
+            width: 0
+        }
     },
     menuButton: {
         marginRight: 40,
@@ -55,6 +59,8 @@ export default function PersistentDrawerLeft() {
     const history = useHistory();
     const [open, setOpen] = React.useState(false);
     const [openCollapse, setOpenCollapse] = React.useState(false);
+    const [openAccount, setOpenAccount] = React.useState(false);
+    const [user, setUser] = useState('')
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -67,6 +73,29 @@ export default function PersistentDrawerLeft() {
     const handleClickOpenCollapse = () => {
         setOpenCollapse(!openCollapse)
     }
+
+    const handleClickOpenAccount = () => {
+        setOpenAccount(!openAccount)
+    }
+
+    const getUserData = () => {
+        try {
+            if (auth.currentUser) {
+                firestore.collection('user')
+                    .doc(auth.currentUser.email)
+                    .get()
+                    .then(function (doc) {
+                        setUser({...doc.data()})
+                    })
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        getUserData()
+    }, [auth.currentUser])
 
     return (
         <div className={classes.root}>
@@ -132,6 +161,31 @@ export default function PersistentDrawerLeft() {
                 <ListItem button>
                     <ListItemText primary={'Liên hệ'} onClick={() => history.push('')}/>
                 </ListItem>
+                <ListItem button onClick={handleClickOpenAccount}>
+                    <ListItemText primary="Tài khoản"/>
+                    {openAccount ? <ExpandLess/> : <ExpandMore/>}
+                </ListItem>
+                <Collapse in={openAccount} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        {!user.admin
+                            ? null
+                            : <div>
+                                <ListItem button className={classes.nested}>
+                                    <ListItemText primary="Thêm sản phẩm"/>
+                                </ListItem>
+                                <ListItem button className={classes.nested}>
+                                    <ListItemText primary="Sửa sản phẩm"/>
+                                </ListItem>
+                            </div>
+                        }
+                        <ListItem button className={classes.nested}>
+                            <ListItemText primary="Thông tin tài khoản"/>
+                        </ListItem>
+                        <ListItem button className={classes.nested}>
+                            <ListItemText primary="Đăng xuất"/>
+                        </ListItem>
+                    </List>
+                </Collapse>
             </Drawer>
         </div>
     );

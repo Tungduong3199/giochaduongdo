@@ -9,7 +9,6 @@ import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles(theme => ({
     container: {
-        boxShadow: '1px 4px 8px 5px rgba(0, 0, 0, 0.1)',
         height: 400,
         width: 540,
         [theme.breakpoints.down('sm')]: {
@@ -24,6 +23,11 @@ const useStyles = makeStyles(theme => ({
             height: 350
         }
     },
+    image: {
+        width: 540,
+        height: 400,
+        boxShadow: '1px 4px 8px 5px rgba(0, 0, 0, 0.1)',
+    }
 }))
 
 const slideImages = [
@@ -45,26 +49,26 @@ const properties = {
 const Slider = () => {
     const classes = useStyles();
     return (
-        <Grid item xs={12} className={classes.container} style={{}}>
+        <Grid item xs={12} className={classes.container}>
             <Fade {...properties}>
                 <div className="each-slide">
                     <div className={classes.img}>
-                        <img src={slideImages[0]} style={{width: 540, height: 400}}/>
+                        <img src={slideImages[0]} className={classes.image}/>
                     </div>
                 </div>
                 <div className="each-slide">
                     <div className={classes.img}>
-                        <img src={slideImages[1]} style={{width: 540, height: 400}}/>
+                        <img src={slideImages[1]} className={classes.image}/>
                     </div>
                 </div>
                 <div className="each-slide">
                     <div className={classes.img}>
-                        <img src={slideImages[2]} style={{width: 540, height: 400}}/>
+                        <img src={slideImages[2]} className={classes.image}/>
                     </div>
                 </div>
                 <div className="each-slide">
                     <div className={classes.img}>
-                        <img src={slideImages[3]} style={{width: 540, height: 400}}/>
+                        <img src={slideImages[3]} className={classes.image}/>
                     </div>
                 </div>
             </Fade>

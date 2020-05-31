@@ -10,7 +10,7 @@ import {AddShoppingCart, Search} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
     container: {
-        marginTop: 10,
+        marginTop: 40,
         [theme.breakpoints.down('sm')]: {
             marginBottom: 520
         }
@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => ({
         }
     },
     product: {
-        height: 615,
+        height: 625,
         backgroundColor: '#245a46'
     },
     imgCarousel: {
@@ -86,22 +86,25 @@ const useStyles = makeStyles(theme => ({
         }
     },
     icon: {
-        width: 30,
-        height: 30,
+        width: 40,
+        height: 40,
         color: '#fff',
         backgroundColor: '#245a46',
         borderRadius: 30,
         padding: 8,
     },
     containerIcon: {
+        height: 46,
         position: 'absolute',
+        top: '50%',
+        left: '50%',
+
+        transition: 'all 0.3s ease-in-out',
+        transform: 'translateX(-50%) translateY(-100%)',
         zIndex: 10,
-        transform: 'translateY(80px) translateX(43px)',
         opacity: 0,
         visibility: 'hidden',
-        transition: 'all 0.3s ease-in-out',
-        height: 46,
-        cursor: 'pointer'
+        cursor: 'pointer',
     },
     product1: {
         '&:hover > div': {
@@ -190,10 +193,9 @@ function ListProductDetails({data, cate, img, img1, img2}) {
                             {data.map(value =>
                                 <div className={classes.product1}>
                                     <div className={classes.containerIcon}>
-                                        <Search onClick={handleSearch} className={classes.icon}
-                                                style={{marginRight: 5}}/>
-                                        <AddShoppingCart onClick={handleCart} className={classes.icon}
-                                                         style={{marginLeft: 5}}/>
+                                        <Search style={{marginRight: 10}} onClick={handleSearch}
+                                                className={classes.icon}/>
+                                        <AddShoppingCart onClick={handleCart} className={classes.icon}/>
                                     </div>
                                     <div onClick={() => handleClick(value.name, value.id)}>
                                         <ProductDetails data={value}/>

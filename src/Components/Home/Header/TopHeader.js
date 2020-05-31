@@ -4,6 +4,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useHistory} from 'react-router-dom'
 import {auth, firestore} from '../../../firebaseConfig'
 import HoverName from "./HoverName";
+import {useGlobal} from "reactn";
 
 const useStyles = makeStyles({
     text: {
@@ -39,6 +40,7 @@ const useStyles = makeStyles({
 function TopHeader() {
     const classes = useStyles()
     const history = useHistory();
+    const [, setAuthUser] = useGlobal('admin')
     const [user, setUser] = useState('')
 
     const getUserData = () => {
@@ -49,6 +51,7 @@ function TopHeader() {
                     .get()
                     .then(function (doc) {
                         setUser({...doc.data()})
+                        setAuthUser({...doc.data()})
                     })
             }
         } catch (e) {
