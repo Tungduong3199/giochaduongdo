@@ -11,7 +11,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.4.1",
-    "firebase": "^7.13.1",
+    "firebase": "^10.9.0",
     "firebaseui": "^4.5.0",
     "lodash": "^4.17.15",
     "notistack": "^0.9.10",
